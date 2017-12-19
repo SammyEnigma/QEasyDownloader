@@ -39,6 +39,10 @@
 #if !defined(QEASY_DOWNLOADER_HPP_INCLUDED)
 #define QEASY_DOWNLOADER_HPP_INCLUDED
 #include <QtCore>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+
 
 /*
  * Class QEasyDownloader <- Inherits QObject
@@ -90,26 +94,22 @@ class QEasyDownloader : public QObject
 {
     Q_OBJECT
 public:
-    explicit QEasyDownloader(QObject *parent = NULL)
+    explicit QEasyDownloader(QObject *parent = NULL, QNetworkAccessManager *toUseManager = NULL)
         : QObject(parent)
     {
-        _pManager = new QNetworkAccessManager(this);
-    }
-
-    explicit QEasyDownloader(QObject *parent = NULL, QNetworkAccessManager *toUseManager)
-        : QObject(parent)
-    {
-        _pManager = toUseManger;
+        _pManager = (toUseManager == NULL) ? new QNetworkAccessManager(this) : toUseManager;
     }
 
     void Debug()
     {
         doDebug = !doDebug;
+        return;
     }
 
     void ResumeDownloads()
     {
         doResumeDownloads = !doResumeDownloads;
+        return;
     }
 
     ~QEasyDownloader()
@@ -172,7 +172,6 @@ private slots:
     void finished()
     {
         _Timer.stop();
-        downloadSpeed.stop();
         _pFile->close();
         _pFile = NULL;
         _pCurrentReply = 0;
@@ -206,10 +205,21 @@ private slots:
             );
 
         double speed = bytesReceived * 1000.0 / downloadSpeed.elapsed();
+        QString unit;
+        if (speed < 1024) {
+            unit = "bytes/sec";
+        } else if (speed < 1024*1024) {
+            speed /= 1024;
+            unit = "kB/s";
+        } else {
+            speed /= 1024*1024;
+            unit = "MB/s";
+        }
         emit DownloadProgress(bytesReceived,
                               bytesTotal,
                               nPercentage,
                               speed,
+                              unit,
                               _URL,
                               _qsFileName);
         _Timer.start(5000);
@@ -218,7 +228,12 @@ private slots:
 
     void startNextDownload()
     {
+        if(StopDownload) {
+            return;
+        }
+
         if (downloadQueue.isEmpty()) {
+            emit Finished();
             return;
         }
 
@@ -248,7 +263,13 @@ private slots:
 
     void error(QNetworkReply::NetworkError errorCode)
     {
-        emit error(errorCode, _URL, _qsFileName);
+        emit Error(errorCode, _URL, _qsFileName);
+        return;
+    }
+
+    void timeout()
+    {
+        emit Timeout(_URL, _qsFileName);
         return;
     }
 
@@ -269,9 +290,9 @@ public slots:
         QStringList DownloadInformation;
         DownloadInformation << givenURL << fileName;
         downloadQueue.enqueue(DownloadInformation);
-        ++TotalCount;
+        ++_TotalCount;
 
-        if(TotalCount == 1) {
+        if(_TotalCount == 1) {
             QTimer::singleShot(0, this, SLOT(startNextDownload()));
         }
         return;
@@ -283,12 +304,35 @@ public slots:
         return;
     }
 
-    void Stop()
+    void Pause()
     {
+        if (_pCurrentReply == NULL || StopDownload) {
+            return;
+        }
+        _Timer.stop();
+        disconnect(&_Timer, SIGNAL(timeout()), this, SLOT(timeout()));
+        disconnect(_pCurrentReply, SIGNAL(finished()), this, SLOT(finished()));
+        disconnect(_pCurrentReply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(downloadProgress(qint64,qint64)));
+        disconnect(_pCurrentReply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(error(QNetworkReply::NetworkError)));
+
+        _pCurrentReply->abort();
+        _pFile->flush();
+        _pCurrentReply = 0;
+        _nDownloadSizeAtPause = _nDownloadSize;
+        _nDownloadSize = 0;
+        StopDownload = true;
+
+        return;
     }
 
     void Resume()
     {
+        if(!StopDownload || _pCurrentReply != NULL) {
+            return;
+        }
+        StopDownload = false;
+        download();
+        return;
     }
 
 signals:
@@ -296,21 +340,31 @@ signals:
      * I'm only giving the parameters a name because it would be easy to
      * find its meaning!
     */
+    void Finished();
     void DownloadFinished(const QUrl &url, const QString& fileName);
     void DownloadProgress(qint64 bytesReceived,
                           qint64 bytesTotal,
-                          qint64 percent,
+                          int percent,
                           double speed,
+                          const QString &unit,
                           const QUrl &url,
                           const QString &fileName);
-    void error(QNetworkReply::NetworkError errorCode, const QUrl &url, const QString &fileName);
-    void timeout();
+    void Error(QNetworkReply::NetworkError errorCode, const QUrl &url, const QString &fileName);
+    void Timeout(const QUrl &url, const QString &fileName);
 
 private:
-    QNetworkAccessManager*    _pManager;
+    QNetworkAccessManager    *_pManager = NULL;
     QNetworkRequest           _CurrentRequest;
-    QNetworkReply*            _pCurrentReply;
+    QNetworkReply            *_pCurrentReply = NULL;
+    QFile		     *_pFile = NULL;
+
+    QTimer _Timer;
+    QTime  downloadSpeed;
+    QUrl    _URL;
+    QString _qsFileName;
+
     QQueue<QStringList> downloadQueue;
+
     int _nDownloadTotal = 0,
         _nDownloadSize = 0,
         _nDownloadSizeAtPause = 0,
@@ -320,10 +374,5 @@ private:
          StopDownload = false,
          doResumeDownloads = true,
          doDebug = false;
-    QTimer _Timer, downloadSpeed;
-    QFile  *_pFile;
-    QUrl   _URL;
-    QString _qsFileName;
-
 };  // Class QEasyDownloader END
 #endif // QEASY_DOWNLOADER_HPP_INCLUDED
