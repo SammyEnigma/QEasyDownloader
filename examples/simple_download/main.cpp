@@ -1,30 +1,42 @@
 #include <QCoreApplication>
-#include <iostream>
 #include "../../QEasyDownloader.hpp"
 
-int main(int argc , char **argv){
-	QCoreApplication app(argc , argv);
-	QEasyDownloader Downloader;
-	
-	QObject::connect(&Downloader , &QEasyDownloader::DownloadFinished , [&](QUrl Url , QString file)
-	{
-		qDebug() << "Downloaded :: " << file << " :: FROM :: " << Url;
-		app.quit();
-	});
+int main(int argc, char **argv)
+{
+    QCoreApplication app(argc, argv);
 
-	QObject::connect(&Downloader , &QEasyDownloader::DownloadProgress ,
-	[&](qint64 rec, qint64 total , int percentage , double speed , QString unit , QUrl Url , QString file)
-	{
-		qDebug() << "Downloading " << percentage << "% at " << speed << unit << " :: FROM :: " << Url
-		<< " :: TO :: " << file;
+    /*
+     * Construct
+    */
+    QEasyDownloader Downloader;
 
-		qDebug() << "Downloaded :: " << rec << " out of " << total << " Bytes.";
-	});	
-										
+    /*
+     * By Default Debug is false , make it true to print the download progress and
+     * other stuff!
+    */
+    Downloader.Debug(true);
 
-	Downloader.Download("http://speedtest-ny.turnkeyinternet.net/100mb.bin");
-	
-	
+    /*
+     * By Default auto Resuming of Downloads is true.
+     *
+     * You can also disable auto resuming of downloads.
+     * But I strongly recommend you don't!
+    */
+    // Downloader.ResumeDownloads(false);
 
-	return app.exec();
+    /*
+     * Connect Callbacks!
+    */
+    QObject::connect(&Downloader, &QEasyDownloader::DownloadFinished,
+    [&](QUrl Url, QString file) {
+        qDebug() << "Downloaded :: " << file << " :: FROM :: " << Url;
+        app.quit();
+    });
+
+    /*
+     * Just Download!
+    */
+    Downloader.Download("http://speedtest-ny.turnkeyinternet.net/100mb.bin");
+
+    return app.exec();
 }
