@@ -176,13 +176,22 @@ private slots:
 
     void finished()
     {
-        _Timer.stop();
-        _pFile->close();
-        _pFile = NULL;
-        _pCurrentReply = 0;
-
-        emit DownloadFinished(_URL, _qsFileName);
-        startNextDownload();
+        if(!isError) {
+            if(doDebug) {
+                qDebug() << "QEasyDownloader::Finishing Download!";
+            }
+            _Timer.stop();
+            _pFile->close();
+            _pFile = NULL;
+            _pCurrentReply = 0;
+            emit DownloadFinished(_URL, _qsFileName);
+            startNextDownload();
+        } else {
+            if(doDebug) {
+                qDebug() << "QEasyDownloader::Avoiding finished slot call because of error!";
+            }
+            isError = false;
+        }
         return;
     }
 
@@ -277,6 +286,7 @@ private slots:
 
     void error(QNetworkReply::NetworkError errorCode)
     {
+        isError = true;
         if(doDebug) {
             qDebug() << "QEasyDownloader::error::" << errorCode;
         }
@@ -372,6 +382,11 @@ public slots:
         return;
     }
 
+    void Next()
+    {
+        startNextDownload();
+        return;
+    }
 signals:
     /*
      * I'm only giving the parameters a name because it would be easy to
@@ -409,6 +424,7 @@ private:
         _TotalCount = 0;
     bool _bAcceptRanges = false,
          StopDownload = false,
+         isError = false,
          doResumeDownloads = true,
          doDebug = false;
 };  // Class QEasyDownloader END
