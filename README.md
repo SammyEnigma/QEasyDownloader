@@ -4,11 +4,12 @@
 
 # QEasyDownloader [![GitHub issues](https://img.shields.io/github/issues/antony-jr/QEasyDownloader.svg?style=flat-square)](https://github.com/antony-jr/QEasyDownloader/issues) [![GitHub forks](https://img.shields.io/github/forks/antony-jr/QEasyDownloader.svg?style=flat-square)](https://github.com/antony-jr/QEasyDownloader/network) [![GitHub stars](https://img.shields.io/github/stars/antony-jr/QEasyDownloader.svg?style=flat-square)](https://github.com/antony-jr/QEasyDownloader/stargazers) [![GitHub license](https://img.shields.io/github/license/antony-jr/QEasyDownloader.svg?style=flat-square)](https://github.com/antony-jr/QEasyDownloader/blob/master/LICENSE) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6f7381a508c14a6a91b1f77b375f080d)](https://www.codacy.com/app/antony-jr/QEasyDownloader?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=antony-jr/QEasyDownloader&amp;utm_campaign=Badge_Grade)
 
-Have you ever choked on the **QNetworkAccessManager** to download **large files and also resume downloads automatically** ?   
-I did , So thats why I created this small header file which made my day easier and so I think it will make yours too. :heart:   
-This small header contains the **QEasyDownloader** class which downloads files that you queue and also automatically resumes   
-the downloads (**Partial Download** ?). **QEasyDownloader** also handles **network interruptions** automatically! :dog:   
-And the best part is , **its just a header!** :cat:
+Have you ever choked on the **QNetworkAccessManager** to download **large files and also resume downloads   
+automatically** ? I did , So thats why I created this small header file which made my day easier and so I   
+think it will make yours too. :heart: This small header contains the **QEasyDownloader** class which   
+downloads files that you queue and also automatically resumes the downloads (**Partial Download** ?).   
+**QEasyDownloader** also handles **network interruptions** automatically! :dog: And the best part is ,   
+**its just a header!** :cat:
 
 
 # Installation
