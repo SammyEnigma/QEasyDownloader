@@ -62,6 +62,9 @@
  *
  *  	Warning: Disabling Resuming of Downloads will overwrite the file if found!
  *
+ * 	void setTimeoutTime(int) - sets the timeout time (in miliseconds) for a request! default is 5000 = 5 secs
+ * 	void setRetryTime(int)   - sets the retry time (in miliseconds) for a request! default is 6000 = 6 secs
+ *
  *  Private Slots:
  *	void download() - Starts the download with the current pointer _URL and _qsFileName
  *	void finishedHead() - Checks if the source has partial download.
@@ -115,6 +118,19 @@ public:
         return;
     }
 
+    void setTimeoutTime(int time)
+    {
+
+	_TimeoutTime = time;
+	return;
+    }
+
+    void setRetryTime(int time)
+    {
+	_RetryTime = time;
+	return;
+    }
+
     ~QEasyDownloader()
     {
         _pManager->deleteLater();
@@ -136,7 +152,7 @@ private slots:
 
         _pCurrentReply = _pManager->get(_CurrentRequest);
 
-        _Timer.setInterval(5000);
+        _Timer.setInterval(_TimeoutTime);
         _Timer.setSingleShot(true);
 
         connect(&_Timer, SIGNAL(timeout()), this, SLOT(timeout()));
@@ -241,7 +257,7 @@ private slots:
                               unit,
                               _URL,
                               _qsFileName);
-        _Timer.start(5000);
+        _Timer.start(_TimeoutTime);
         return;
     }
 
@@ -269,7 +285,7 @@ private slots:
         _CurrentRequest = QNetworkRequest(_URL);
         _pCurrentReply = _pManager->head(_CurrentRequest);
 
-        _Timer.setInterval(5000);
+        _Timer.setInterval(_TimeoutTime);
         _Timer.setSingleShot(true);
 
         connect(&_Timer, SIGNAL(timeout()), this, SLOT(timeout()));
@@ -388,15 +404,15 @@ public slots:
 
         }
 	if(access == QNetworkAccessManager::NotAccessible || access == QNetworkAccessManager::UnknownAccessibility) {
+		isError = false;
 		QTimer::singleShot(500 , this , SLOT(Pause()));
 		return;
         }
-	QTimer::singleShot(6000 , this , SLOT(Resume()));
+	QTimer::singleShot(_RetryTime , this , SLOT(Resume()));
 	if(doDebug)
 	{
 		qDebug() << "QEasyDownloader::Retry ::" << "Success!";
-	}
-	
+	}	
         return;
     }
 
@@ -433,6 +449,8 @@ private:
         _nDownloadSize = 0,
         _nDownloadSizeAtPause = 0,
         _DownloadedCount = 0,
+	_TimeoutTime = 5000,
+	_RetryTime = 6000,
         _TotalCount = 0;
     bool _bAcceptRanges = false,
          StopDownload = false,
