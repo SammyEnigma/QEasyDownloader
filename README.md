@@ -11,6 +11,14 @@ downloads files that you queue and also automatically resumes the downloads (**P
 **QEasyDownloader** also handles **network interruptions** automatically! :dog: And the best part is ,   
 **its just a header!** :cat:
 
+### Features
+* In-Built Download Queue support :heart:
+* Automatically Resumes Downloads , can be disabled if the user wants to! :dog:
+* Automatically handles **Network Interruptions**. :cat:
+* **Pause** and **Resume** Downloads like a charm. :rocket:
+* Resource manipulation , **Use your own QNetworkAccessManager** too. :sunglasses:
+
+
 
 # Installation
 
