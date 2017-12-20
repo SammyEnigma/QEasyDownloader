@@ -18,7 +18,33 @@ downloads files that you queue and also automatically resumes the downloads (**P
 * **Pause** and **Resume** Downloads like a charm. :rocket:
 * Resource manipulation , **Use your own QNetworkAccessManager** too. :sunglasses:
 
+# Usage
+```
+#include <QCoreApplication>
+#include "QEasyDownloader/QEasyDownloader.hpp"
 
+int main(int argc, char **argv)
+{
+    QCoreApplication app(argc, argv);
+    QEasyDownloader Downloader;
+    /*
+     * By Default Debug is false , make it true to print the download progress and
+     * other stuff!
+    */
+    Downloader.Debug(true);
+    
+    QObject::connect(&Downloader, &QEasyDownloader::DownloadFinished,
+    [&](QUrl Url, QString file) {
+        qDebug() << "Downloaded :: " << file << " :: FROM :: " << Url;
+        app.quit();
+    });
+    /*
+     * Just Download!
+    */
+    Downloader.Download("http://www.divineimagination.com/gallery/movie/roving_web.wmv");
+    return app.exec();
+}
+```
 
 # Installation
 
