@@ -121,14 +121,14 @@ public:
     void setTimeoutTime(int time)
     {
 
-	_TimeoutTime = time;
-	return;
+        _TimeoutTime = time;
+        return;
     }
 
     void setRetryTime(int time)
     {
-	_RetryTime = time;
-	return;
+        _RetryTime = time;
+        return;
     }
 
     ~QEasyDownloader()
@@ -302,7 +302,7 @@ private slots:
     void error(QNetworkReply::NetworkError errorCode)
     {
         isError = true;
-	if(doDebug) {
+        if(doDebug) {
             qDebug() << "QEasyDownloader::error::" << errorCode;
         }
         emit Error(errorCode, _URL, _qsFileName);
@@ -314,7 +314,7 @@ private slots:
         if(doDebug) {
             qDebug() << "QEasyDownloader::timeout";
         }
-	emit Timeout(_URL, _qsFileName);
+        emit Timeout(_URL, _qsFileName);
         return;
     }
 
@@ -403,16 +403,15 @@ public slots:
             qDebug() << "QEasyDownloader::Retry :: " << access;
 
         }
-	if(access == QNetworkAccessManager::NotAccessible || access == QNetworkAccessManager::UnknownAccessibility) {
-		isError = false;
-		QTimer::singleShot(500 , this , SLOT(Pause()));
-		return;
+        if(access == QNetworkAccessManager::NotAccessible || access == QNetworkAccessManager::UnknownAccessibility) {
+            isError = false;
+            QTimer::singleShot(500, this, SLOT(Pause()));
+            return;
         }
-	QTimer::singleShot(_RetryTime , this , SLOT(Resume()));
-	if(doDebug)
-	{
-		qDebug() << "QEasyDownloader::Retry ::" << "Success!";
-	}	
+        QTimer::singleShot(_RetryTime, this, SLOT(Resume()));
+        if(doDebug) {
+            qDebug() << "QEasyDownloader::Retry ::" << "Success!";
+        }
         return;
     }
 
@@ -449,8 +448,8 @@ private:
         _nDownloadSize = 0,
         _nDownloadSizeAtPause = 0,
         _DownloadedCount = 0,
-	_TimeoutTime = 5000,
-	_RetryTime = 6000,
+        _TimeoutTime = 5000,
+        _RetryTime = 6000,
         _TotalCount = 0;
     bool _bAcceptRanges = false,
          StopDownload = false,
