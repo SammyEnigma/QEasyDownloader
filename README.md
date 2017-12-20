@@ -46,6 +46,8 @@ int main(int argc, char **argv)
 }
 ```
 
+Refer the wiki for more information on the **QEasyDownloader** class , [QEasyDownloader Wiki](https://github.com/antony-jr/QEasyDownloader/wiki)
+
 # Installation
 
 ```
