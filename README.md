@@ -69,6 +69,8 @@ Take a look at the examples in the **examples** directory of this repo.
 
 ### Methods
 
+**Warning:** Disabling Resuming of Downloads will **overwrite the file if found!**
+
 | void ResumeDownloads(bool); 	| Enable or Disable Resuming of Downloads!                                       	|
 |-----------------------------	|--------------------------------------------------------------------------------	|
 | void Debug(bool);           	| Enable or Disable Debuging                                                     	|
@@ -84,6 +86,14 @@ Take a look at the examples in the **examples** directory of this repo.
 | void Resume();                                  	| Resume any paused download.                           	|
 
 ### Signals
+
+| void Finished() 	| Emitted when all jobs are done. 	|
+|------------------------------------------------------------------------------------------------------------------------------------------------------------	|-----------------------------------------------------	|
+| void DownloadFinished(const QUrl &url, const QString& fileName) 	| Emitted when a single file is downloaded. 	|
+| void DownloadProgress(qint64 bytesReceived, qint64 bytesTotal, int percent, double speed, const QString &unit,  const QUrl &url,  const QString &fileName) 	| Full Download Progress , Emitted on every download. 	|
+| void Error(QNetworkReply::NetworkError errorCode, const QUrl &url, const QString &fileName) 	| Emitted on error. 	|
+| void Timeout(const QUrl &url, const QString &fileName) 	| Emitted when there is a timeout. 	|  
+
 
 
 # Deploying your apps
