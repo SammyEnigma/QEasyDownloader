@@ -100,6 +100,7 @@ public:
         : QObject(parent)
     {
         _pManager = (toUseManager == NULL) ? new QNetworkAccessManager(this) : toUseManager;
+        connect(_pManager, &QNetworkAccessManager::networkAccessibleChanged, this, &QEasyDownloader::Retry);
     }
 
     void Debug(bool ch)
@@ -176,22 +177,20 @@ private slots:
 
     void finished()
     {
-        if(!isError) {
-            if(doDebug) {
-                qDebug() << "QEasyDownloader::Finishing Download!";
-            }
-            _Timer.stop();
-            _pFile->close();
-            _pFile = NULL;
-            _pCurrentReply = 0;
-            emit DownloadFinished(_URL, _qsFileName);
-            startNextDownload();
-        } else {
-            if(doDebug) {
-                qDebug() << "QEasyDownloader::Avoiding finished slot call because of error!";
-            }
+        if(isError) {
             isError = false;
+            return;
         }
+        if(doDebug) {
+            qDebug() << "QEasyDownloader::Finishing Download!";
+        }
+        _Timer.stop();
+        _pFile->close();
+        _pFile = NULL;
+        _pCurrentReply = 0;
+
+        emit DownloadFinished(_URL, _qsFileName);
+        startNextDownload();
         return;
     }
 
@@ -287,7 +286,7 @@ private slots:
     void error(QNetworkReply::NetworkError errorCode)
     {
         isError = true;
-        if(doDebug) {
+	if(doDebug) {
             qDebug() << "QEasyDownloader::error::" << errorCode;
         }
         emit Error(errorCode, _URL, _qsFileName);
@@ -299,7 +298,7 @@ private slots:
         if(doDebug) {
             qDebug() << "QEasyDownloader::timeout";
         }
-        emit Timeout(_URL, _qsFileName);
+	emit Timeout(_URL, _qsFileName);
         return;
     }
 
@@ -382,11 +381,25 @@ public slots:
         return;
     }
 
-    void Next()
+    void Retry(QNetworkAccessManager::NetworkAccessibility access)
     {
-        startNextDownload();
+        if(doDebug) {
+            qDebug() << "QEasyDownloader::Retry :: " << access;
+
+        }
+	if(access == QNetworkAccessManager::NotAccessible || access == QNetworkAccessManager::UnknownAccessibility) {
+		QTimer::singleShot(500 , this , SLOT(Pause()));
+		return;
+        }
+	QTimer::singleShot(6000 , this , SLOT(Resume()));
+	if(doDebug)
+	{
+		qDebug() << "QEasyDownloader::Retry ::" << "Success!";
+	}
+	
         return;
     }
+
 signals:
     /*
      * I'm only giving the parameters a name because it would be easy to
@@ -414,7 +427,6 @@ private:
     QTime  downloadSpeed;
     QUrl    _URL;
     QString _qsFileName;
-
     QQueue<QStringList> downloadQueue;
 
     int _nDownloadTotal = 0,

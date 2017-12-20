@@ -36,7 +36,6 @@ int main(int argc, char **argv)
     /*
      * Just Download!
     */
-    Downloader.Download("http://speedtest-ny.turnkeyinternet.net/100mb.bin");
-
+    Downloader.Download("http://www.divineimagination.com/gallery/movie/roving_web.wmv");
     return app.exec();
 }
