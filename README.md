@@ -46,7 +46,7 @@ int main(int argc, char **argv)
 }
 ```
 
-Refer the wiki for more information on the **QEasyDownloader** class , [QEasyDownloader Wiki](https://github.com/antony-jr/QEasyDownloader/wiki)
+Refer the **Class Anatomy** for more information on the **QEasyDownloader** class , [QEasyDownloader Class Anatomy](#class-anatomy)
 
 # Installation
 
@@ -57,6 +57,8 @@ Refer the wiki for more information on the **QEasyDownloader** class , [QEasyDow
 
 **Just add the header file to your qt project file (.pro) and include the header in your source files!**   
 Take a look at the examples in the **examples** directory of this repo.
+
+# Class Anatomy
 
 # Deploying your apps
 
