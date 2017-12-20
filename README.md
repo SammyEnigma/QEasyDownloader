@@ -12,7 +12,8 @@
  $ # Thats it
 ```
 
-**Refer the wiki for more information on Compiling ,** [Compiling with QEasyDownloader](https://github.com/antony-jr/QEasyDownloader/wiki/Compiling)
+**Just add the header file to your qt project file (.pro) and include the header in your source files!**   
+Take a look at the examples in the **examples** directory of this repo.
 
 # Deploying your apps
 
