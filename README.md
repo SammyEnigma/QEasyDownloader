@@ -60,6 +60,32 @@ Take a look at the examples in the **examples** directory of this repo.
 
 # Class Anatomy
 
+**QEasyDownloader** is the main class that handles downloads like a pro , it is **inherited from QObject**.
+
+### Constructors
+
+| QEasyDownloader(QObject *parent = NULL , QNetworkAccessManager *toUseManager = NULL); | Assigns a parent if the user gives one and assigns a QNetworkAccessManager if the user already uses a single NetworkManager for his/her application. |
+|---------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|   
+
+### Methods
+
+| void ResumeDownloads(bool); 	| Enable or Disable Resuming of Downloads!                                       	|
+|-----------------------------	|--------------------------------------------------------------------------------	|
+| void Debug(bool);           	| Enable or Disable Debuging                                                     	|
+| void setTimeoutTime(int);   	| sets the timeout time (in miliseconds) for a request! default is 5000 = 5 secs 	|
+| void setRetryTime(int)      	| sets the retry time (in miliseconds) for a request! default is 6000 = 6 secs   	|
+
+### Slots
+
+| void Download(const QString& , const QString&); 	| Download a file and save it in the location provided. 	|
+|-------------------------------------------------	|-------------------------------------------------------	|
+| void Download(const QString&);                  	| Simply download a file.                               	|
+| void Pause();                                   	| Pause the current download.                           	|
+| void Resume();                                  	| Resume any paused download.                           	|
+
+### Signals
+
+
 # Deploying your apps
 
 I really recommend you all to use dynamic linking on all platforms and then pack it with simple containers this way you can   
