@@ -279,6 +279,15 @@ private slots:
         _URL = QUrl(DownloadInformation.at(0));
         _qsFileName = DownloadInformation.at(1);
 
+	if(_URL.isEmpty() || _qsFileName.isEmpty())
+	{
+	    if(doDebug){
+	    	qDebug() << "QEasyDownloader::Invalid URL::Skiping!";
+	    }
+	    QTimer::singleShot(0, this, SLOT(startNextDownload()));
+	    return;
+	}
+
         _nDownloadSize = 0;
         _nDownloadSizeAtPause = 0;
 
