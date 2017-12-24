@@ -79,6 +79,8 @@
  *	void Pause() - Pause the current download.
  *	void Resume() - Resume any paused download.
  *
+ *	void Get(const QUrl&) - Simple HTTP/HTTPS GET Request.
+ *
  *  Signals:
  *  	void Finished() - Emitted when all jobs are done.
  *  	void DownloadFinished(const QUrl &url, const QString& fileName) - Emitted when a single file is downloaded.
@@ -94,6 +96,9 @@
  *  	           const QString &fileName) - Emitted on error.
  *      void Timeout(const QUrl &url, const QString &fileName) - Emitted when there is a timeout.
  *
+ *
+ * 	void GetResponse(const QString&) - Emitted when Get(const QUrl&) is successfull.
+ *
 */
 class QEasyDownloader : public QObject
 {
@@ -105,7 +110,6 @@ public:
         _pManager = (toUseManager == NULL) ? new QNetworkAccessManager(this) : toUseManager;
         connect(_pManager, &QNetworkAccessManager::networkAccessibleChanged, this, &QEasyDownloader::Retry);
     }
-
     void Debug(bool ch)
     {
         doDebug = ch;
@@ -279,14 +283,13 @@ private slots:
         _URL = QUrl(DownloadInformation.at(0));
         _qsFileName = DownloadInformation.at(1);
 
-	if(_URL.isEmpty() || _qsFileName.isEmpty())
-	{
-	    if(doDebug){
-	    	qDebug() << "QEasyDownloader::Invalid URL::Skiping!";
-	    }
-	    QTimer::singleShot(0, this, SLOT(startNextDownload()));
-	    return;
-	}
+        if(_URL.isEmpty() || _qsFileName.isEmpty()) {
+            if(doDebug) {
+                qDebug() << "QEasyDownloader::Invalid URL::Skiping!";
+            }
+            QTimer::singleShot(0, this, SLOT(startNextDownload()));
+            return;
+        }
 
         _nDownloadSize = 0;
         _nDownloadSizeAtPause = 0;
@@ -424,6 +427,30 @@ public slots:
         return;
     }
 
+    void Get(const QUrl &url)
+    {
+        _CurrentRequest = QNetworkRequest(url);
+        _pCurrentGetReply = _pManager->get(_CurrentRequest);
+
+        connect(_pCurrentGetReply, &QNetworkReply::finished,
+        [&]() {
+            if(_pCurrentGetReply->attribute( QNetworkRequest::HttpStatusCodeAttribute ).toInt() >= 300) {
+                return;
+            }
+
+            QString Response(_pCurrentGetReply->readAll());
+
+            if(doDebug) {
+                qDebug() << "QEasyDownloader::GET::" << Response;
+            }
+            emit GetResponse(Response);
+            return;
+
+        });
+        connect(_pCurrentGetReply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(error(QNetworkReply::NetworkError)));
+        return;
+    }
+
 signals:
     /*
      * I'm only giving the parameters a name because it would be easy to
@@ -440,11 +467,13 @@ signals:
                           const QString &fileName);
     void Error(QNetworkReply::NetworkError errorCode, const QUrl &url, const QString &fileName);
     void Timeout(const QUrl &url, const QString &fileName);
+    void GetResponse(const QString &content);
 
 private:
     QNetworkAccessManager    *_pManager = NULL;
     QNetworkRequest           _CurrentRequest;
-    QNetworkReply            *_pCurrentReply = NULL;
+    QNetworkReply            *_pCurrentReply = NULL,
+                              *_pCurrentGetReply = NULL;
     QFile		     *_pFile = NULL;
 
     QTimer _Timer;
