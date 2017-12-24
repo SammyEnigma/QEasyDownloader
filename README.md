@@ -21,7 +21,7 @@ downloads files that you queue and also automatically resumes the downloads (**P
 # Usage
 ```
 #include <QCoreApplication>
-#include "QEasyDownloader/QEasyDownloader.hpp"
+#include "QEasyDownloader.hpp"
 
 int main(int argc, char **argv)
 {
@@ -51,8 +51,8 @@ Refer the **Class Anatomy** for more information on the **QEasyDownloader** clas
 # Installation
 
 ```
- $ git clone https://github.com/antony-jr/QEasyDownloader
- $ # Thats it
+ $ wget "https://github.com/antony-jr/QEasyDownloader/releases/download/v0.0.1/QEasyDownloader.hpp"
+ $ # Thats it , You just have to download the header
 ```
 
 **Just add the header file to your qt project file (.pro) and include the header in your source files!**   
