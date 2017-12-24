@@ -50,10 +50,16 @@ Refer the **Class Anatomy** for more information on the **QEasyDownloader** clas
 
 # Installation
 
+**Please check the releases!**
+**Replace** , **x,y, and z** with the version number that you want.
+
 ```
- $ wget "https://github.com/antony-jr/QEasyDownloader/releases/download/v0.0.1/QEasyDownloader.hpp"
- $ # Thats it , You just have to download the header
+ $ wget \
+  "https://github.com/antony-jr/QEasyDownloader/releases/download/vx.y.z/QEasyDownloader-vx.y.z.tar.gz"
+ $ tar -xvf QEasyDownloader-vx.y.z.tar.gz # There is a zip too
+ $ # Thats it , You just need to download the header
 ```
+
 
 **Just add the header file to your qt project file (.pro) and include the header in your source files!**   
 Take a look at the examples in the **examples** directory of this repo.
