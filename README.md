@@ -90,6 +90,7 @@ Take a look at the examples in the **examples** directory of this repo.
 | void Download(const QString&);                  	| Simply download a file.                               	|
 | void Pause();                                   	| Pause the current download.                           	|
 | void Resume();                                  	| Resume any paused download.                           	|
+| void Get(const QUrl&);                            | Simple GET Request without downloading.                 |
 
 ### Signals
 
@@ -99,8 +100,7 @@ Take a look at the examples in the **examples** directory of this repo.
 | void DownloadProgress(qint64 bytesReceived, qint64 bytesTotal, int percent, double speed, const QString &unit,  const QUrl &url,  const QString &fileName) 	| Full Download Progress , Emitted on every download. 	|
 | void Error(QNetworkReply::NetworkError errorCode, const QUrl &url, const QString &fileName) 	| Emitted on error. 	|
 | void Timeout(const QUrl &url, const QString &fileName) 	| Emitted when there is a timeout. 	|  
-
-
+| void GetResponse(const QString& )     | Emitted when void Get(const QUrl&) is successfull |
 
 # Deploying your apps
 
