@@ -32,10 +32,9 @@ int main(int argc, char **argv)
         qDebug() << "Downloaded :: " << file << " :: FROM :: " << Url;
         app.quit();
     });
-
     /*
      * Just Download!
     */
-    Downloader.Download("https://github.com/antony-jr/QArchive/releases/download/v0.0.2/QArchive-v0.0.2.tar.gz");
+    Downloader.Download("http://sample-videos.com/video/mp4/720/big_buck_bunny_720p_5mb.mp4");
     return app.exec();
 }

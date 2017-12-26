@@ -42,7 +42,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
-
+#include <QAuthenticator>
 
 /*
  * Class QEasyDownloader <- Inherits QObject
@@ -108,7 +108,10 @@ public:
         : QObject(parent)
     {
         _pManager = (toUseManager == NULL) ? new QNetworkAccessManager(this) : toUseManager;
+        _pManager->setRedirectPolicy(QNetworkRequest::NoLessSafeRedirectPolicy);
         connect(_pManager, &QNetworkAccessManager::networkAccessibleChanged, this, &QEasyDownloader::Retry);
+        connect(_pManager, SIGNAL(authenticationRequired(QNetworkReply*, QAuthenticator*)),
+                this, SLOT(doAuthenticate(QNetworkReply*, QAuthenticator*)));
     }
     void Debug(bool ch)
     {
@@ -132,6 +135,13 @@ public:
     void setRetryTime(int time)
     {
         _RetryTime = time;
+        return;
+    }
+
+    void setAuthorization(const QString &user, const QString &pass)
+    {
+        this->username = user;
+        this->password = pass;
         return;
     }
 
@@ -262,6 +272,16 @@ private slots:
                               _URL,
                               _qsFileName);
         _Timer.start(_TimeoutTime);
+        return;
+    }
+
+
+    void doAuthenticate(QNetworkReply * reply, QAuthenticator * authenticator)
+    {
+        if(!username.isEmpty() && !password.isEmpty()) {
+            authenticator->setUser(username);
+            authenticator->setPassword(password);
+        }
         return;
     }
 
@@ -479,7 +499,9 @@ private:
     QTimer _Timer;
     QTime  downloadSpeed;
     QUrl    _URL;
-    QString _qsFileName;
+    QString _qsFileName,
+            username,
+            password;
     QQueue<QStringList> downloadQueue;
 
     int _nDownloadTotal = 0,

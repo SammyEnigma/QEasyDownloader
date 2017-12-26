@@ -82,6 +82,8 @@ Take a look at the examples in the **examples** directory of this repo.
 | void Debug(bool);           	| Enable or Disable Debuging                                                     	|
 | void setTimeoutTime(int);   	| sets the timeout time (in miliseconds) for a request! default is 5000 = 5 secs 	|
 | void setRetryTime(int)      	| sets the retry time (in miliseconds) for a request! default is 6000 = 6 secs   	|
+| void setAuthorization(const QString&, const QString&) | sets the authorization user/password if the user wants to.    |  
+
 
 ### Slots
 
