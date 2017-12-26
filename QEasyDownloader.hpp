@@ -218,7 +218,7 @@ private slots:
     {
         _Timer.stop();
 
-        if(_pCurrentReply->attribute( QNetworkRequest::HttpStatusCodeAttribute ).toInt() >= 300) {
+        if(_pCurrentReply->attribute( QNetworkRequest::HttpStatusCodeAttribute ).toInt() >= 400) {
             startNextDownload();
             return;
         }
@@ -434,7 +434,7 @@ public slots:
 
         connect(_pCurrentGetReply, &QNetworkReply::finished,
         [&]() {
-            if(_pCurrentGetReply->attribute( QNetworkRequest::HttpStatusCodeAttribute ).toInt() >= 300) {
+            if(_pCurrentGetReply->attribute( QNetworkRequest::HttpStatusCodeAttribute ).toInt() >= 400) {
                 return;
             }
 

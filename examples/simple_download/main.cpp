@@ -36,6 +36,6 @@ int main(int argc, char **argv)
     /*
      * Just Download!
     */
-    Downloader.Download("http://www.divineimagination.com/gallery/movie/roving_web.wmv");
+    Downloader.Download("https://github.com/antony-jr/QArchive/releases/download/v0.0.2/QArchive-v0.0.2.tar.gz");
     return app.exec();
 }
