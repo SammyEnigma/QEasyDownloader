@@ -42,7 +42,6 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
-#include <QAuthenticator>
 
 /*
  * Class QEasyDownloader <- Inherits QObject
@@ -110,8 +109,6 @@ public:
         _pManager = (toUseManager == NULL) ? new QNetworkAccessManager(this) : toUseManager;
         _pManager->setRedirectPolicy(QNetworkRequest::NoLessSafeRedirectPolicy);
         connect(_pManager, &QNetworkAccessManager::networkAccessibleChanged, this, &QEasyDownloader::Retry);
-        connect(_pManager, SIGNAL(authenticationRequired(QNetworkReply*, QAuthenticator*)),
-                this, SLOT(doAuthenticate(QNetworkReply*, QAuthenticator*)));
     }
     void Debug(bool ch)
     {
@@ -135,13 +132,6 @@ public:
     void setRetryTime(int time)
     {
         _RetryTime = time;
-        return;
-    }
-
-    void setAuthorization(const QString &user, const QString &pass)
-    {
-        this->username = user;
-        this->password = pass;
         return;
     }
 
@@ -172,6 +162,7 @@ private slots:
         connect(&_Timer, SIGNAL(timeout()), this, SLOT(timeout()));
 
         _Timer.start();
+        downloadSpeed.start();
 
         connect(_pCurrentReply, SIGNAL(finished()), this, SLOT(finished()));
         connect(_pCurrentReply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(downloadProgress(qint64,qint64)));
@@ -185,7 +176,17 @@ private slots:
         _Timer.stop();
         _bAcceptRanges = false;
 
-        if (_pCurrentReply->hasRawHeader("Accept-Ranges") && doResumeDownloads) {
+
+        if(_pCurrentReply->attribute( QNetworkRequest::HttpStatusCodeAttribute ).toInt() >= 400) {
+            if(doDebug) {
+                qDebug() << "QEasyDownloader::HTTP ERROR::"
+                         << _pCurrentReply->attribute( QNetworkRequest::HttpStatusCodeAttribute ).toInt();
+            }
+            startNextDownload();
+            return;
+        }
+
+        if (_pCurrentReply->hasRawHeader("Accept-Ranges")) {
             QString qstrAcceptRanges = _pCurrentReply->rawHeader("Accept-Ranges");
             _bAcceptRanges = (qstrAcceptRanges.compare("bytes", Qt::CaseInsensitive) == 0);
         }
@@ -228,10 +229,20 @@ private slots:
     {
         _Timer.stop();
 
-        if(_pCurrentReply->attribute( QNetworkRequest::HttpStatusCodeAttribute ).toInt() >= 400) {
-            startNextDownload();
-            return;
+        if(!doResumeDownloads) {
+            if(_nDownloadTotal == 0) {
+                _nDownloadTotal = _pCurrentReply->header(QNetworkRequest::ContentLengthHeader).toInt();
+            }
+            if(_pCurrentReply->attribute( QNetworkRequest::HttpStatusCodeAttribute ).toInt() >= 400) {
+                if(doDebug) {
+                    qDebug() << "QEasyDownloader::HTTP ERROR::"
+                             << _pCurrentReply->attribute( QNetworkRequest::HttpStatusCodeAttribute ).toInt();
+                }
+                startNextDownload();
+                return;
+            }
         }
+
         _nDownloadSize = _nDownloadSizeAtPause + bytesReceived;
         _pFile->write(_pCurrentReply->readAll());
 
@@ -275,16 +286,6 @@ private slots:
         return;
     }
 
-
-    void doAuthenticate(QNetworkReply * reply, QAuthenticator * authenticator)
-    {
-        if(!username.isEmpty() && !password.isEmpty()) {
-            authenticator->setUser(username);
-            authenticator->setPassword(password);
-        }
-        return;
-    }
-
     void startNextDownload()
     {
         if(StopDownload) {
@@ -311,23 +312,33 @@ private slots:
             return;
         }
 
+
         _nDownloadSize = 0;
         _nDownloadSizeAtPause = 0;
 
         _CurrentRequest = QNetworkRequest(_URL);
-        _pCurrentReply = _pManager->head(_CurrentRequest);
 
-        _Timer.setInterval(_TimeoutTime);
-        _Timer.setSingleShot(true);
+        if(doResumeDownloads) {
+            _pCurrentReply = _pManager->head(_CurrentRequest);
 
-        connect(&_Timer, SIGNAL(timeout()), this, SLOT(timeout()));
+            _Timer.setInterval(_TimeoutTime);
+            _Timer.setSingleShot(true);
 
-        _Timer.start();
-        downloadSpeed.start();
+            connect(&_Timer, SIGNAL(timeout()), this, SLOT(timeout()));
 
-        connect(_pCurrentReply, SIGNAL(finished()), this, SLOT(finishedHead()));
-        connect(_pCurrentReply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(error(QNetworkReply::NetworkError)));
+            _Timer.start();
 
+            connect(_pCurrentReply, SIGNAL(finished()), this, SLOT(finishedHead()));
+            connect(_pCurrentReply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(error(QNetworkReply::NetworkError)));
+        } else {
+            _CurrentRequest.setRawHeader("Connection", "Keep-Alive");
+            _CurrentRequest.setAttribute(QNetworkRequest::HttpPipeliningAllowedAttribute, true);
+            _pFile = new QFile(_qsFileName);
+            _pFile->remove();
+            _pFile->open(QIODevice::ReadWrite | QIODevice::Append);
+            _nDownloadSizeAtPause = _pFile->size();
+            download();
+        }
         return;
     }
 
@@ -499,9 +510,7 @@ private:
     QTimer _Timer;
     QTime  downloadSpeed;
     QUrl    _URL;
-    QString _qsFileName,
-            username,
-            password;
+    QString _qsFileName;
     QQueue<QStringList> downloadQueue;
 
     int _nDownloadTotal = 0,
