@@ -54,7 +54,7 @@ Refer the **Class Anatomy** for more information on the **QEasyDownloader** clas
 You just need to download the header and nothing else.
 
 ```
- $ curl -L "" | bash
+ $ curl -L "https://git.io/vbdTW" | bash
 ```
 
 
