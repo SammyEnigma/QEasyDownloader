@@ -50,14 +50,11 @@ Refer the **Class Anatomy** for more information on the **QEasyDownloader** clas
 
 # Installation
 
-**Please check the releases!**
-**Replace** , **x,y, and z** with the version number that you want.
+**Fow Windows and Mac , Please check the releases!**   
+You just need to download the header and nothing else.
 
 ```
- $ wget \
-  "https://github.com/antony-jr/QEasyDownloader/releases/download/vx.y.z/QEasyDownloader-vx.y.z.tar.gz"
- $ tar -xvf QEasyDownloader-vx.y.z.tar.gz # There is a zip too
- $ # Thats it , You just need to download the header
+ $ curl -L "" | bash
 ```
 
 
