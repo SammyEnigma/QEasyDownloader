@@ -7,7 +7,7 @@
 isCurl=$(command -v curl);
 packageName="QEasyDownloader"
 license="LICENSE"
-repoRawUrl="https://github.com/antony-jr/QEasyDownloader/blob/master/"
+repoRawUrl="https://raw.githubusercontent.com/antony-jr/QEasyDownloader/master/"
 
 if [ $isCurl ]
 	then
