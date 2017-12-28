@@ -2,6 +2,10 @@
   <img src=".img/poster.png" height="350px" width=auto alt="QEasyDownloader Poster">  <br>
 </p>
 
+> A Simple and Powerful Downloader Header writen in C++ with Qt5. This small header helps you Download and Resume   
+> Your Downloads Elegantly.   
+> --Antony Jr.
+
 # QEasyDownloader [![GitHub issues](https://img.shields.io/github/issues/antony-jr/QEasyDownloader.svg?style=flat-square)](https://github.com/antony-jr/QEasyDownloader/issues) [![GitHub forks](https://img.shields.io/github/forks/antony-jr/QEasyDownloader.svg?style=flat-square)](https://github.com/antony-jr/QEasyDownloader/network) [![GitHub stars](https://img.shields.io/github/stars/antony-jr/QEasyDownloader.svg?style=flat-square)](https://github.com/antony-jr/QEasyDownloader/stargazers) [![GitHub license](https://img.shields.io/github/license/antony-jr/QEasyDownloader.svg?style=flat-square)](https://github.com/antony-jr/QEasyDownloader/blob/master/LICENSE) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6f7381a508c14a6a91b1f77b375f080d)](https://www.codacy.com/app/antony-jr/QEasyDownloader?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=antony-jr/QEasyDownloader&amp;utm_campaign=Badge_Grade)
 
 Have you ever choked on the **QNetworkAccessManager** to download **large files and also resume downloads   
@@ -16,100 +20,12 @@ downloads files that you queue and also automatically resumes the downloads (**P
 * Automatically Resumes Downloads , can be disabled if the user wants to! :dog:
 * Automatically handles **Network Interruptions**. :cat:
 * **Pause** and **Resume** Downloads like a charm. :rocket:
-* Resource manipulation , **Use your own QNetworkAccessManager** too. :sunglasses:
+ 
+<!-- $ curl -L "https://git.io/vbdTW" | bash -->
 
-# Usage
-```
-#include <QCoreApplication>
-#include "QEasyDownloader.hpp"
+# Getting Started
 
-int main(int argc, char **argv)
-{
-    QCoreApplication app(argc, argv);
-    QEasyDownloader Downloader;
-    /*
-     * By Default Debug is false , make it true to print the download progress and
-     * other stuff!
-    */
-    Downloader.Debug(true);
-    
-    QObject::connect(&Downloader, &QEasyDownloader::DownloadFinished,
-    [&](QUrl Url, QString file) {
-        qDebug() << "Downloaded :: " << file << " :: FROM :: " << Url;
-        app.quit();
-    });
-    /*
-     * Just Download!
-    */
-    Downloader.Download("http://www.divineimagination.com/gallery/movie/roving_web.wmv");
-    return app.exec();
-}
-```
-
-Refer the **Class Anatomy** for more information on the **QEasyDownloader** class , [QEasyDownloader Class Anatomy](#class-anatomy)
-
-# Installation
-
-**Fow Windows and Mac , Please check the releases!**   
-You just need to download the header and nothing else.
-
-```
- $ curl -L "https://git.io/vbdTW" | bash
-```
-
-
-**Just add the header file to your qt project file (.pro) and include the header in your source files!**   
-Take a look at the examples in the **examples** directory of this repo.
-
-# Class Anatomy
-
-**QEasyDownloader** is the main class that handles downloads like a pro , it is **inherited from QObject**.
-
-### Constructors
-
-| QEasyDownloader(QObject *parent = NULL , QNetworkAccessManager *toUseManager = NULL); | Assigns a parent if the user gives one and assigns a QNetworkAccessManager if the user already uses a single NetworkManager for his/her application. |
-|---------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|   
-
-### Methods
-
-**Warning:** Disabling Resuming of Downloads will **overwrite the file if found!**
-
-| void ResumeDownloads(bool); 	| Enable or Disable Resuming of Downloads!                                       	|
-|-----------------------------	|--------------------------------------------------------------------------------	|
-| void Debug(bool);           	| Enable or Disable Debuging                                                     	|
-| void setTimeoutTime(int);   	| sets the timeout time (in miliseconds) for a request! default is 5000 = 5 secs 	|
-| void setRetryTime(int)      	| sets the retry time (in miliseconds) for a request! default is 6000 = 6 secs   	|
-| void setAuthorization(const QString&, const QString&) | sets the authorization user/password if the user wants to.    |  
-
-
-### Slots
-
-| void Download(const QString& , const QString&); 	| Download a file and save it in the location provided. 	|
-|-------------------------------------------------	|-------------------------------------------------------	|
-| void Download(const QString&);                  	| Simply download a file.                               	|
-| void Pause();                                   	| Pause the current download.                           	|
-| void Resume();                                  	| Resume any paused download.                           	|
-| void Get(const QUrl&);                            | Simple GET Request without downloading.                 |
-
-### Signals
-
-| void Finished() 	| Emitted when all jobs are done. 	|
-|------------------------------------------------------------------------------------------------------------------------------------------------------------	|-----------------------------------------------------	|
-| void DownloadFinished(const QUrl &url, const QString& fileName) 	| Emitted when a single file is downloaded. 	|
-| void DownloadProgress(qint64 bytesReceived, qint64 bytesTotal, int percent, double speed, const QString &unit,  const QUrl &url,  const QString &fileName) 	| Full Download Progress , Emitted on every download. 	|
-| void Error(QNetworkReply::NetworkError errorCode, const QUrl &url, const QString &fileName) 	| Emitted on error. 	|
-| void Timeout(const QUrl &url, const QString &fileName) 	| Emitted when there is a timeout. 	|  
-| void GetResponse(const QString& )     | Emitted when void Get(const QUrl&) is successfull |
-
-# Deploying your apps
-
-I really recommend you all to use dynamic linking on all platforms and then pack it with simple containers this way you can   
-avoid the overhead of static compiling and also make it just work! :dog:
-
-In windows you can simply throw in the dll files and compress it into a setup file and distribute it to the users but its   
-different in linux , refer this [Qt Doc](http://doc.qt.io/qt-5/linux-deployment.html) for information on deploying qt apps.   
-
-In addition you can use [AppImages](https://github.com/appImage/appimagekit) and [linuxdeployqt](https://github.com/probonopd/linuxdeployqt).
+Learn more about **QEasyDownloader** at the official [QEasyDownloader Documentation](https://antony-jr.github.io/QEasyDownloader)
 
 # Thank You ![Thank You](https://img.shields.io/badge/Always-Say%20Thank%20You!-blue.svg?style=flat-square)
 
