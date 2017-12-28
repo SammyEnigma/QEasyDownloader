@@ -2,8 +2,8 @@
   <img src=".img/poster.png" height="350px" width=auto alt="QEasyDownloader Poster">  <br>
 </p>
 
-> A Simple and Powerful Downloader Header writen in C++ with Qt5. This small header helps you Download and Resume   
-> Your Downloads Elegantly.   
+> :dog: A Simple and Powerful :rocket: Downloader Header writen in C++ with Qt5. This small header helps you Download and Resume   
+> Your Downloads Elegantly.:heart: :cat:   
 > --Antony Jr.
 
 # QEasyDownloader [![GitHub issues](https://img.shields.io/github/issues/antony-jr/QEasyDownloader.svg?style=flat-square)](https://github.com/antony-jr/QEasyDownloader/issues) [![GitHub forks](https://img.shields.io/github/forks/antony-jr/QEasyDownloader.svg?style=flat-square)](https://github.com/antony-jr/QEasyDownloader/network) [![GitHub stars](https://img.shields.io/github/stars/antony-jr/QEasyDownloader.svg?style=flat-square)](https://github.com/antony-jr/QEasyDownloader/stargazers) [![GitHub license](https://img.shields.io/github/license/antony-jr/QEasyDownloader.svg?style=flat-square)](https://github.com/antony-jr/QEasyDownloader/blob/master/LICENSE) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6f7381a508c14a6a91b1f77b375f080d)](https://www.codacy.com/app/antony-jr/QEasyDownloader?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=antony-jr/QEasyDownloader&amp;utm_campaign=Badge_Grade)
