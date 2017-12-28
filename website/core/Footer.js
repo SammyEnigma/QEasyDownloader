@@ -29,12 +29,12 @@ class Footer extends React.Component {
               Getting Started
             </a>
             <a
-              href={`${this.props.config.baseUrl}docs/UsingExtractor.html`}
+              href={`${this.props.config.baseUrl}docs/UsingDownloader.html`}
 	    >
               Guides
             </a>
             <a
-              href={`${this.props.config.baseUrl}docs/QArchiveFormats.html`}
+              href={`${this.props.config.baseUrl}docs/QEasyDownloaderErrorCodes.html`}
 	    >
               API Reference
             </a>
@@ -48,7 +48,7 @@ class Footer extends React.Component {
               User Showcase
             </a>
             <a
-              href="http://stackoverflow.com/questions/tagged/Qt/"
+              href="http://stackoverflow.com/questions/tagged/QNetworkAccessManager/"
               target="_blank">
               Stack Overflow
             </a>

@@ -24,7 +24,7 @@ const users = [
 
 const siteConfig = {
   title: 'QEasyDownloader' /* title for your website */,
-  tagline: 'A Simple and Powerful Download Manager for Qt Projects.',
+  tagline: 'A Simple and Powerful Downloader Library.',
   url: 'https://antony-jr.github.io' /* your website url */,
   baseUrl: '/QEasyDownloader/' /* base url for your project */,
   projectName: 'QEasyDownloader',
@@ -35,12 +35,12 @@ const siteConfig = {
   ],
   users,
   /* path to images for header/footer */
-  headerIcon: 'img/QArchive.png',
-  footerIcon: 'img/QArchive.png',
+  headerIcon: 'img/QEasyDownloader.png',
+  footerIcon: 'img/QEasyDownloader.png',
   favicon: 'img/favicon.png',
   /* colors for website */
   colors: {
-    primaryColor: '#262626',
+    primaryColor: '#e14420',
     secondaryColor: '#1a8cff',
   },
   // This copyright info is used in /core/Footer.js and blog rss/atom feeds.

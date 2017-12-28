@@ -37,7 +37,7 @@ class HomeSplash extends React.Component {
         <div className="homeSplashFade">
           <div className="wrapper homeWrapper">
             <div className="projectLogo">
-              <img src={siteConfig.baseUrl + 'img/QArchive.png'} />
+              <img src={siteConfig.baseUrl + 'img/QEasyDownloader.png'} />
             </div>
             <div className="inner">
               <h2 className="projectTitle">
@@ -59,11 +59,11 @@ class HomeSplash extends React.Component {
                       href={
                         siteConfig.baseUrl +
                         'docs/' +
-                        'QArchiveFormats.html'
+                        'QEasyDownloaderErrorCodes.html'
                       }>
                       API Reference
                     </Button>
-	            <Button href={'https://github.com/antony-jr/QArchive'}>
+	            <Button href={'https://github.com/antony-jr/QEasyDownloader'}>
 	    	      View on Github
 	    	    </Button>
                   </div>
@@ -101,27 +101,42 @@ class Index extends React.Component {
               align="center"
               contents={[
                 {
-                  content: 'QArchive fully supports Qt Projects by flowing with its event loop and'+
-			   ' thus you will have no problem integrating QArchive with your Qt Project.',
+                  content: 'QEasyDownloader fully supports Qt Projects by flowing with its event loop and'+
+			   ' thus you will have no problem integrating QEasyDownloader with your Qt Project.',
                   image: siteConfig.baseUrl + 'img/qt.png',
                   imageAlign: 'top',
                   title: 'Supports Qt\'s Event Loop.',
                 },
-                {
-                  content: 'Whatever archive you throw at QArchive , it will never fail you Because its' +
-			   ' backed by a very stable project ( libarchive ) and so giving you a lot of options '+
-			   'with a clean C++ API.',
-                  image: siteConfig.baseUrl + 'img/extract.png',
+		{
+                  content: 'QEasyDownloader can automatically resume downloads on incomplete files , It also '+
+                           'allows the user to pause or resume the download any time! Thus giving the user ' +
+			   'a best downloading experience.',
+                  image: siteConfig.baseUrl + 'img/pause.png',
                   imageAlign: 'top',
-                  title: 'Works with a Wide Range of Archive Formats.',
+                  title: 'Pause , Resume and Partial Retrive with ease!',
                 },
 		{
-                  content: 'This project is rated by <b>Codacy</b> with a <b>A Project Certification</b>' +
-                           ' and thus integrating this header will not affect your source , So this project is also'+
-                           ' best suited for those who care about code taste.',
+                  content: 'QEasyDownloader supports queueing and thus it can download large number of files '+
+                           'with ease , this makes your day even more easier!',
+                  image: siteConfig.baseUrl + 'img/queue.png',
+                  imageAlign: 'top',
+                  title: 'Support for Queueing of Download\'s.',
+                },
+		{
+                  content: 'QEasyDownloader does not like leaving heavy traces for the users and thus '+
+                           'it is packed with all its amazing features in a single C++ header file , this ' +
+			   'makes QEasyDownloader easier to integrate with your project.',
+                  image: siteConfig.baseUrl + 'img/header.png',
+                  imageAlign: 'top',
+                  title: 'Header only library!',
+                },
+		{
+                  content: '<center>This project is rated by <b>Codacy</b> with a <b>A Project Certification</b><br>' +
+                           ' and thus integrating this header will not affect your source , So this project is also<br>'+
+                           ' best suited for those who care about code taste.<br></center>',
                   image: siteConfig.baseUrl + 'img/clean_code.png',
                   imageAlign: 'top',
-                  title: 'Clean C++ API.',
+                  title: '<center>Clean C++ API.</center>',
                 },
 
               ]}
@@ -133,15 +148,13 @@ class Index extends React.Component {
             <GridBlock
               contents={[
                 {
-                  content:
-                    'For a long time I\'ve been searching for a easy to use archive library for C++ with Qt support' +
-		    ', I came accross libarchive , it was super cool ? but it did\'nt have a official C++ binding. ' +
-		    'Some C++ Wrappers for libarchive exists like moor but I needed something so simple as 1,2,3 and'+
-		    ' also support Qt\'s event loop.'+
-		    ''+
-		    'So QArchive is the result of the above , it is a C++ Cross-Platform header that Modernizes libarchive'+
-		    'using Qt5. Simply extracts 7z , Tarballs , RAR and other supported formats by libarchive.',
-                  title: 'Why Create QArchive ?',
+                  content: 
+		  'Have you ever choked on the QNetworkAccessManager to download large files and also resume downloads '+
+	  	  'automatically ? I did , So thats why I created this small header file which made my day easier and so I '+
+		  'think it will make yours too. This small header contains the QEasyDownloader class which downloads files '+
+		  'that you queue and also automatically resumes the downloads (Partial Download ?). QEasyDownloader also '+
+		  'handles network interruptions automatically! And the best part is ,its just a header!',
+                  title: 'Why Create QEasyDownloader ?',
                 },
               ]}
             />

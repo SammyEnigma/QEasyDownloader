@@ -4,8 +4,10 @@
 	   "Installation"
     ],
     "Guides" : [
+	    "UsingDownloader"
     ],
     "API" : [
+	    "QEasyDownloaderErrorCodes"
     ]
   }
 }
