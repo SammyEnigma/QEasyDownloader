@@ -1,6 +1,7 @@
 ---
 id: Installation
-title: Installation
-sidebar_label: Install QEasyDownloader
+title: Installing QEasyDownloader
+sidebar_label: Installation
 ---
+
 
