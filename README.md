@@ -20,8 +20,6 @@ downloads files that you queue and also automatically resumes the downloads (**P
 * Automatically Resumes Downloads , can be disabled if the user wants to! :dog:
 * Automatically handles **Network Interruptions**. :cat:
 * **Pause** and **Resume** Downloads like a charm. :rocket:
- 
-<!-- $ curl -L "https://git.io/vbdTW" | bash -->
 
 # Getting Started
 
