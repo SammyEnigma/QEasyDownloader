@@ -1,13 +1,15 @@
 {
   "docs": {
     "Getting Started": [ 
-	   "Installation"
+	   "Installation",
+	   "AddingQEasyDownloader"
     ],
     "Guides" : [
 	    "UsingDownloader"
     ],
     "API" : [
-	    "QEasyDownloaderErrorCodes"
+	    "QEasyDownloaderErrorCodes",
+	    "ClassQEasyDownloader"
     ]
   }
 }

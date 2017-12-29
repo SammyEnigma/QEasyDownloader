@@ -7,7 +7,9 @@ sidebar_label: Installation
 **QEasyDownloader** is a small header writen in C++ using Qt5. This little header helps you   
 to **resume** , **download** and **stop** downloads anytime.   
 
-This small header also **resume** downloads automatically!
+This small header also **resumes** downloads automatically!
+
+**Before jumping the gun , make sure you have installed the [dependencies](#dependencies)**
 
 ## Dependencies
 

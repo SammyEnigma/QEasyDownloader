@@ -36,8 +36,7 @@ def installPackage(config):
             fp.write(it)
         fp.close()
 
-    print("Thank you for choosing "+config["repo"])
-    print("Successfully Installed "+config["repo"] + "!")
+    print("Installed "+config["repo"] + ".")
     return True
 
 if __name__ == "__main__":
