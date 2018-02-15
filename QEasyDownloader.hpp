@@ -60,6 +60,8 @@
  *
  *  Methods:
  *  	void Debug(bool) -  Enable or Disable Debuging
+ *  	void Iterated(bool) - Enable iterated Downloading.
+ *  			      ( i.e Download a file in Queue , Stop , Get Approved then Download again.)
  *  	void ResumeDownloads(bool) - Enable or Disable Resuming of Downloads!
  *
  *  	Warning: Disabling Resuming of Downloads will overwrite the file if found!
@@ -116,6 +118,12 @@ public:
     void Debug(bool ch)
     {
         doDebug = ch;
+        return;
+    }
+
+    void Iterated(bool ch)
+    {
+        doIterate = ch;
         return;
     }
 
@@ -196,7 +204,11 @@ private slots:
                 qDebug() << "QEasyDownloader::HTTP ERROR::"
                          << _pCurrentReply->attribute( QNetworkRequest::HttpStatusCodeAttribute ).toInt();
             }
-            startNextDownload();
+            if(!doIterate) {
+                startNextDownload();
+            } else {
+                canIterate = true;
+            }
             return;
         }
 
@@ -260,8 +272,12 @@ private slots:
         _pFile = NULL;
         _pCurrentReply = 0;
 
+        if(!doIterate) {
+            startNextDownload();
+        } else {
+            canIterate = true;
+        }
         emit DownloadFinished(_URL, _qsFileName);
-        startNextDownload();
         return;
     }
 
@@ -472,6 +488,25 @@ public slots:
         return;
     }
 
+
+    bool isNext()
+    {
+        return !downloadQueue.isEmpty();
+    }
+
+    void Next()
+    {
+        if(!doIterate) {
+            return;
+        }
+
+        if(canIterate) {
+            startNextDownload();
+            canIterate = false;
+        }
+        return;
+    }
+
     void Retry(QNetworkAccessManager::NetworkAccessibility access)
     {
         if(doDebug) {
@@ -556,6 +591,8 @@ private:
          StopDownload = false,
          isError = false,
          doResumeDownloads = true,
+         doIterate = false,
+         canIterate = false,
          doDebug = false;
 };  // Class QEasyDownloader END
 #endif // QEASY_DOWNLOADER_HPP_INCLUDED
