@@ -34,7 +34,7 @@
  *  @description 	: A Simple and Powerful Downloader Header writen in C++
  *  			  with Qt5. This small header helps you Download and
  *  			  Resume Downloads Elegantly , Only for HTTP.
- *  @tag		: v0.0.5
+ *  @tag		: v0.0.5-rev1
  * -----------------------------------------------------------------------------
 */
 #if !defined(QEASY_DOWNLOADER_HPP_INCLUDED)
