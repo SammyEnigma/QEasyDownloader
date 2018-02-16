@@ -34,7 +34,7 @@
  *  @description 	: A Simple and Powerful Downloader Header writen in C++
  *  			  with Qt5. This small header helps you Download and
  *  			  Resume Downloads Elegantly , Only for HTTP.
- *  @tag		: v0.0.5-rev1
+ *  @tag		: v0.0.5-rev2
  * -----------------------------------------------------------------------------
 */
 #if !defined(QEASY_DOWNLOADER_HPP_INCLUDED)
@@ -335,7 +335,8 @@ private slots:
         }
 
         if (downloadQueue.isEmpty()) {
-            emit Finished();
+            NewDownload = true;
+            emit(Finished());
             return;
         }
 
@@ -343,6 +344,7 @@ private slots:
             qDebug() << "QEasyDownloader::Starting Next Download!";
         }
         QStringList DownloadInformation = downloadQueue.dequeue();
+
         _URL = QUrl(DownloadInformation.at(0));
         _qsFileName = DownloadInformation.at(1);
 
@@ -431,10 +433,10 @@ public slots:
         QStringList DownloadInformation;
         DownloadInformation << givenURL << fileName;
         downloadQueue.enqueue(DownloadInformation);
-        ++_TotalCount;
 
-        if(_TotalCount == 1) {
-            QTimer::singleShot(0, this, SLOT(startNextDownload()));
+        if(NewDownload) { // Do not use downloadQueue.size() == 1.
+            NewDownload = false;
+            emit(startNextDownload());
         }
         return;
     }
@@ -501,11 +503,12 @@ public slots:
         }
 
         if(canIterate) {
-            startNextDownload();
+            emit(startNextDownload());
             canIterate = false;
         }
         return;
     }
+
 
     void Retry(QNetworkAccessManager::NetworkAccessibility access)
     {
@@ -585,12 +588,12 @@ private:
         _nDownloadSizeAtPause = 0,
         _DownloadedCount = 0,
         _TimeoutTime = 5000,
-        _RetryTime = 6000,
-        _TotalCount = 0;
+        _RetryTime = 6000;
     bool _bAcceptRanges = false,
          StopDownload = false,
          isError = false,
          doResumeDownloads = true,
+         NewDownload = true,
          doIterate = false,
          canIterate = false,
          doDebug = false;

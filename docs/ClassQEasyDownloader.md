@@ -15,6 +15,7 @@ want in a single class and thus its **easier** for you to **remember**.
 | **explicit**  | QEasyDownloader(QObject *parent = NULL , QNetworkAccessManager *toUseManager = NULL) |
 | **void**	    | Debug(bool choose)								                                   |
 | **void**	    | ResumeDownloads(bool choose)							                               |
+| **void** 	    | Iterated(bool choose)										       |
 | **void**	    | setTimeoutTime(int timeInMiliSecs)						                           |
 | **void**	    | setRetryTime(int timeInMiliSecs)						                               |
 
@@ -27,6 +28,7 @@ want in a single class and thus its **easier** for you to **remember**.
 | **void** 	| Download(const QString& givenUrl)						                                   |
 | **void**	| Pause(void)									                                           |
 | **void**	| Resume(void)									                                           |
+| **void** 	| Next(void) 														   |
 | **void**	| Retry(QNetworkAccessManager::NetworkAccessibility access)			                       |
 | **void**	| Get(const QUrl& url)								                                       |
 
@@ -63,6 +65,11 @@ Sets whether to resume download ( **Partial Download** ) or not.
 > **Warning**: Please **disable** Resume of Downloads for **host** which **does not allow HEAD Request**.   
 > Default is set to **True**
 
+#### void Iterated(bool choose)
+
+Only starts the first download automatically , Then you have to iterate over the downloader.
+In this sequence , Download , When Finished , Approve the next Download and so on until **Finished()** Signal is emitted.
+
 #### void setTimeoutTime(int timeInMiliSecs)
 
 Sets the **timeout** for a **request** , when timeout occurs **Timeout** signal is emitted.
@@ -96,6 +103,12 @@ Pauses any current download.
 <p align="right"> <b>[SLOT]</b> </p>
 
 Resumes if any download is paused.
+
+#### void Next(void)
+<p align="right"> <b>[SLOT]</b> </p>
+
+Download the next item in the download queue. Only enabled when **Iterated(bool)** is set to **True**.
+
 
 #### void Get(const QUrl &url)
 <p align="right"> <b>[SLOT]</b> </p>
