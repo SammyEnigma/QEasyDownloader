@@ -105,7 +105,7 @@ class QEasyDownloader : public QObject
     Q_OBJECT
 public:
     explicit QEasyDownloader(QObject *parent = nullptr, QNetworkAccessManager *toUseManager = nullptr);
-    bool Debug(bool);
+    void Debug(bool);
     void Iterated(bool);
     void ResumeDownloads(bool);
     void setTimeoutTime(int);
