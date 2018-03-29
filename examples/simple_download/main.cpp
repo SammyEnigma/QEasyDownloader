@@ -1,5 +1,5 @@
 #include <QCoreApplication>
-#include "../../QEasyDownloader.hpp"
+#include <QEasyDownloader>
 
 int main(int argc, char **argv)
 {
@@ -14,7 +14,7 @@ int main(int argc, char **argv)
      * By Default Debug is false , make it true to print the download progress and
      * other stuff!
     */
-    Downloader.Debug(true);
+    Downloader.setDebug(true);
 
     /*
      * By Default auto Resuming of Downloads is true.
@@ -22,11 +22,16 @@ int main(int argc, char **argv)
      * You can also disable auto resuming of downloads.
      * But I strongly recommend you don't!
     */
-    // Downloader.ResumeDownloads(false);
+    // Downloader.setResumeDownloads(false);
 
     /*
      * Connect Callbacks!
     */
+    QObject::connect(&Downloader, &QEasyDownloader::Debugger,
+    [&](QString msg) {
+        qDebug() << msg;
+        return;
+    });
     QObject::connect(&Downloader, &QEasyDownloader::DownloadFinished,
     [&](QUrl Url, QString file) {
         qDebug() << "Downloaded :: " << file << " :: FROM :: " << Url;

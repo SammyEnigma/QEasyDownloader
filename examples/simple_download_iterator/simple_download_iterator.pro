@@ -1,4 +1,4 @@
-TARGET = simple_download
+TARGET = simple_download_iterator
 TEMPLATE = app
 INCLUDEPATH += ../../ ../../include
 

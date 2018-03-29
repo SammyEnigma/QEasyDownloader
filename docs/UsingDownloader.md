@@ -10,7 +10,7 @@ This is a basic downloader which downloads a demo video and saves it in the curr
 
 ```
 #include <QCoreApplication>
-#include "QEasyDownloader/QEasyDownloader.hpp"
+#include <QEasyDownloader>
 
 int main(int argc, char **argv)
 {
@@ -20,13 +20,7 @@ int main(int argc, char **argv)
     */
     QEasyDownloader Downloader;
 
-    /*
-     * By Default Debug is false , make it true to print the download progress and
-     * other stuff!
-    */
-    Downloader.Debug(true);
-
-    QObject::connect(&Downloader, &QEasyDownloader::DownloadFinished,
+    Object::connect(&Downloader, &QEasyDownloader::DownloadFinished,
     [&](QUrl Url, QString file) {
         qDebug() << "Downloaded :: " << file << " :: FROM :: " << Url;
         app.quit();
@@ -46,9 +40,9 @@ TARGET = simple_download
 TEMPLATE = app
 
 QT += core network
-
-SOURCES += main.cpp
-HEADERS += QEasyDownloader/QEasyDownloader.hpp
+INCLUDEPATH += QEasyDownloader QEasyDownloader/include 
+SOURCES += main.cpp QEasyDownloader/src/QEasyDownloader.cc
+HEADERS += QEasyDownloader/include/QEasyDownloader.hpp
 ```
 
 ## Compilation and Execution
@@ -56,7 +50,7 @@ HEADERS += QEasyDownloader/QEasyDownloader.hpp
 ```
  $ mkdir build
  $ cd build
- $ qmake ../simple_download.pro
+ $ qmake ..
  $ make -j4
  $ ./simple_download
  $ # now you will have big_buck_bunny_720p_5mb.mp4 saved

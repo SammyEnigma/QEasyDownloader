@@ -4,10 +4,10 @@ title: Installing QEasyDownloader
 sidebar_label: Installation
 ---
 
-**QEasyDownloader** is a small header writen in C++ using Qt5. This little header helps you   
+**QEasyDownloader** is a small library writen in C++ using Qt5. This little library helps you   
 to **resume** , **download** and **stop** downloads anytime.   
 
-This small header also **resumes** downloads automatically!
+This small library also **resumes** downloads automatically!
 
 **Before jumping the gun , make sure you have installed the [dependencies](#dependencies)**
 
@@ -23,43 +23,11 @@ This small header also **resumes** downloads automatically!
 
 ## Installing the latest release from github
 
-Follow the instructions specific for your platform.
-
-### Linux
-
-**Just execute this command on your project folder and everything will be done for you!**   
-You must have **curl** to do this , **don't worry** because most of the linux distro's must   
-have **installed it already** for you , if not then the script will **warn** you to install it!
-
-```
- $ curl -L "https://git.io/vbdTW" | bash
-```
-
-**or** you can also use python.   
-This requires **requests** to be installed , so make sure you have installed **requests** for python.
+Just execute this command in your project directory to install QEasyDownloader   
+but you will need to have python and **requests** to install QEasyDownloader.
+You can also add QEasyDownloader as a **git submodule**.
 
 ```
  $ python -c "from requests import get;exec(get('https://git.io/vbbl6').content)"
 ```
 
-**Thats it!**
-
-### Windows
-
-Execute this command in your **project folder** and everything will be done for you!   
-You need to have **python** with **requests** installed on your pc to do this but you can also clone   
-the entire repo.
-
-```
- > python -c "from requests import get;exec(get('https://git.io/vbbl6').content)"
-```
-
-### MacOSX
-
-Execute this command in your **project folder** and everything will be done automatically!   
-You need to have **python** with **requests** installed on your pc to do this but you can also clone  
-the entire repo.
-
-```
- $ python -c "from requests import get;exec(get('https://git.io/vbbl6').content)"
-```

@@ -2,18 +2,18 @@
   <img src=".img/poster.png" height="350px" width=auto alt="QEasyDownloader Poster">  <br>
 </p>
 
-> :dog: A Simple and Powerful :rocket: Downloader Header writen in C++ with Qt5. This small header helps you Download   
+> :dog: A Simple and Powerful :rocket: Downloader library writen in C++ with Qt5. This small library helps you Download   
 > and Resume Your Downloads Elegantly.:heart: :cat:   
 > --Antony Jr.
 
 # QEasyDownloader [![GitHub issues](https://img.shields.io/github/issues/antony-jr/QEasyDownloader.svg?style=flat-square)](https://github.com/antony-jr/QEasyDownloader/issues) [![GitHub forks](https://img.shields.io/github/forks/antony-jr/QEasyDownloader.svg?style=flat-square)](https://github.com/antony-jr/QEasyDownloader/network) [![GitHub stars](https://img.shields.io/github/stars/antony-jr/QEasyDownloader.svg?style=flat-square)](https://github.com/antony-jr/QEasyDownloader/stargazers) [![GitHub license](https://img.shields.io/github/license/antony-jr/QEasyDownloader.svg?style=flat-square)](https://github.com/antony-jr/QEasyDownloader/blob/master/LICENSE) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6f7381a508c14a6a91b1f77b375f080d)](https://www.codacy.com/app/antony-jr/QEasyDownloader?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=antony-jr/QEasyDownloader&amp;utm_campaign=Badge_Grade)
 
 Have you ever choked on the **QNetworkAccessManager** to download **large files and also resume downloads   
-automatically** ? I did , So thats why I created this small header file which made my day easier and so I   
-think it will make yours too. :heart: This small header contains the **QEasyDownloader** class which   
+automatically** ? I did , So thats why I created this small library which made my day easier and so I   
+think it will make yours too. :heart: This small library contains the **QEasyDownloader** class which   
 downloads files that you queue and also automatically resumes the downloads (**Partial Download** ?).   
 **QEasyDownloader** also handles **network interruptions** automatically! :dog: And the best part is ,   
-**its just a header!** :cat:
+**its just a source and header file!** :cat:
 
 ### Features
 * In-Built Download Queue support :heart:
@@ -21,9 +21,19 @@ downloads files that you queue and also automatically resumes the downloads (**P
 * Automatically handles **Network Interruptions**. :cat:
 * **Pause** and **Resume** Downloads like a charm. :rocket:
 
+# Installation 
+
+Just execute this command in your project directory to install QEasyDownloader
+but you will need to have python and **requests** to install QEasyDownloader.
+You can also add QEasyDownloader as a **git submodule**.
+
+```
+ $ python -c "from requests import get;exec(get('https://git.io/vbbl6').content)"
+```
+
 # Getting Started
 
-Learn more about **QEasyDownloader** at the official [QEasyDownloader Documentation](https://antony-jr.github.io/QEasyDownloader)
+Learn more about **QEasyDownloader** at the official [documentation](https://antony-jr.github.io/QEasyDownloader)
 
 # Thank You ![Thank You](https://img.shields.io/badge/Always-Say%20Thank%20You!-blue.svg?style=flat-square)
 
@@ -55,5 +65,5 @@ Thank You! :smiley_cat:
 
 The BSD 3-clause "New" or "Revised" License.
 
-Copyright (C) 2017 , antony jr.   
+Copyright (C) 2018 , antony jr.   
 All Rights Reserved.
