@@ -21,9 +21,19 @@ downloads files that you queue and also automatically resumes the downloads (**P
 * Automatically handles **Network Interruptions**. :cat:
 * **Pause** and **Resume** Downloads like a charm. :rocket:
 
+# Installation 
+
+Just execute this command in your project directory to install QEasyDownloader
+but you will need to have python and **requests** to install QEasyDownloader.
+You can also add QEasyDownloader as a **git submodule**.
+
+```
+ $ python -c "from requests import get;exec(get('https://git.io/vbbl6').content)"
+```
+
 # Getting Started
 
-Learn more about **QEasyDownloader** at the official [QEasyDownloader Documentation](https://antony-jr.github.io/QEasyDownloader)
+Learn more about **QEasyDownloader** at the official [documentation](https://antony-jr.github.io/QEasyDownloader)
 
 # Thank You ![Thank You](https://img.shields.io/badge/Always-Say%20Thank%20You!-blue.svg?style=flat-square)
 
