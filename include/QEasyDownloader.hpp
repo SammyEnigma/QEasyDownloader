@@ -60,31 +60,24 @@
  * 	already uses a single NetworkManager for his/her application.
  *
  *  Methods:
- *  	void Debug(bool) -  Enable or Disable Debuging
- *  	void Iterated(bool) - Enable iterated Downloading.
+ *  	void setDebug(bool) -  Enable or Disable Debuging
+ *  	void setIterated(bool) - Enable iterated Downloading.
  *  			      ( i.e Download a file in Queue , Stop , Get Approved then Download again.)
- *  	void ResumeDownloads(bool) - Enable or Disable Resuming of Downloads!
+ *  	void setResumeDownloads(bool) - Enable or Disable Resuming of Downloads!
  *
  *  	Warning: Disabling Resuming of Downloads will overwrite the file if found!
  *
- * 	void setTimeoutTime(int) - sets the timeout time (in miliseconds) for a request! default is 5000 = 5 secs
- * 	void setRetryTime(int)   - sets the retry time (in miliseconds) for a request! default is 6000 = 6 secs
- *
- *  Private Slots:
- *	void download() - Starts the download with the current pointer _URL and _qsFileName
- *	void finishedHead() - Checks if the source has partial download.
- *   	void finished() - Frees the file that is beign downloaded.
- *   	void downloadProgress(qint64 , qint64) - Writes to file on each progress.
- *   	void error(QNetworkReply::NetworkError) - Inturn emits a signal to make the user handle it.
- *   	void timeout() - Inturn emits a signal to make the user handle the timeout.
+ * 	    void setTimeoutTime(int) - sets the timeout time (in miliseconds) for a request! default is 5000 = 5 secs
+ * 	    void setRetryTime(int)   - sets the retry time (in miliseconds) for a request! default is 6000 = 6 secs
  *
  *  Public Slots:
- *	void Download(const QString& , const QString&) - Download a file and save it in the location provided.
- *	void Download(const QString&) - Simply download a file.
- *	void Pause() - Pause the current download.
- *	void Resume() - Resume any paused download.
+ *	    void Download(const QString& , const QString&) - Download a file and save it in the location provided.
+ *	    void Download(const QString&) - Simply download a file.
+ *	    void Pause() - Pause the current download.
+ *	    void Resume() - Resume any paused download.
+ *	    bool HasNext() - If iterated is true then this function will return true if download queue is not empty.
+ *	    void Next() - Downloads the next entry in the download queue.
  *
- *	void Get(const QUrl&) - Simple HTTP/HTTPS GET Request.
  *
  *  Signals:
  *  	void Finished() - Emitted when all jobs are done.
@@ -101,8 +94,10 @@
  *  	           const QString &fileName) - Emitted on error.
  *      void Timeout(const QUrl &url, const QString &fileName) - Emitted when there is a timeout.
  *
+ *      void Paused(const QUrl &url , const QString &fileName) - Emitted when paused a download.
+ *      void Resumed(const QUrl &url , const QString &fileName) - Emitted when resumed a download.
+ *      void Debugger(const QString &msg) - Emitted when a debug message is passed.
  *
- * 	void GetResponse(const QString&) - Emitted when Get(const QUrl&) is successfull.
  *
 */
 class QEasyDownloader : public QObject
@@ -132,7 +127,7 @@ public slots:
     void Download(const QString&);
     void Pause();
     void Resume();
-    bool IsNext();
+    bool HasNext();
     void Next();
 signals:
     void Finished();

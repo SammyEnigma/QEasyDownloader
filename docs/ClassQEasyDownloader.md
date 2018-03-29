@@ -12,16 +12,15 @@ want in a single class and thus its **easier** for you to **remember**.
 
 |	         	|				                                         						       |
 |---------------|--------------------------------------------------------------------------------------|
-| **explicit**  | QEasyDownloader(QObject *parent = NULL , QNetworkAccessManager *toUseManager = NULL) |
-| **void**	    | Debug(bool choose)								                                   |
-| **void**	    | ResumeDownloads(bool choose)							                               |
-| **void** 	    | Iterated(bool choose)										       |
+| **explicit**  | QEasyDownloader(QObject *parent = nullptr , QNetworkAccessManager *toUseManager = nullptr)|
+| **void**	    | setDebug(bool choose)								                                   |
+| **void**	    | setResumeDownloads(bool choose)							                               |
+| **void** 	    | setIterated(bool choose)										       |
 | **void**	    | setTimeoutTime(int timeInMiliSecs)						                           |
 | **void**	    | setRetryTime(int timeInMiliSecs)						                               |
 
 
 ### Slots
-
 |		        |	    							                                                   |
 |---------------|--------------------------------------------------------------------------------------|
 | **void**	| Download(const QString& givenUrl , const QString& saveAs)			                       |
@@ -29,9 +28,7 @@ want in a single class and thus its **easier** for you to **remember**.
 | **void**	| Pause(void)									                                           |
 | **void**	| Resume(void)									                                           |
 | **void** 	| Next(void) 														   |
-| **void**	| Retry(QNetworkAccessManager::NetworkAccessibility access)			                       |
-| **void**	| Get(const QUrl& url)								                                       |
-
+| bool      | HasNext(void)                                                                            |
 
 ### Signals
 
@@ -42,8 +39,9 @@ want in a single class and thus its **easier** for you to **remember**.
 | **void**	    | DownloadProgress(qint64 received,qint64 total,int percent,double speed,const QString &unit,const QUrl &url,const QString &fileName) |
 | **void**      | Error(QNetworkReply::NetworkError **[errorCode](QEasyDownloaderErrorCodes.md)** , const QUrl &url, const QString &fileName)         |
 | **void**      | Timeout(const QUrl &url, const QString &fileName)                                                                                   |
-| **void**      | GetResponse(const QString &content)                                                                                                 |
-
+| **void**      | Paused(const QUrl &url , const QString &fileName)                                                                 |
+| **void**      | Resumed(const QUrl &url , const QString &fileName)                                                                |
+| **void**      | Debugger(const QString &msg)                                                                                      |
 
 
 ## Member Functions Documentation

@@ -526,7 +526,7 @@ void QEasyDownloader::Resume()
 }
 
 
-bool QEasyDownloader::IsNext()
+bool QEasyDownloader::HasNext()
 {
     QMutexLocker locker(&mutex);
     return !_downloadQueue.isEmpty();
