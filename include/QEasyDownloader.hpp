@@ -105,9 +105,9 @@ class QEasyDownloader : public QObject
     Q_OBJECT
 public:
     explicit QEasyDownloader(QObject *parent = nullptr, QNetworkAccessManager *toUseManager = nullptr);
-    void Debug(bool);
-    void Iterated(bool);
-    void ResumeDownloads(bool);
+    void setDebug(bool);
+    void setIterated(bool);
+    void setResumeDownloads(bool);
     void setTimeoutTime(int);
     void setRetryTime(int);
     ~QEasyDownloader();
@@ -155,7 +155,6 @@ private:
     int _nDownloadTotal = 0,
         _nDownloadSize = 0,
         _nDownloadSizeAtPause = 0,
-        _nDownloadedCount = 0,
         _nTimeoutTime = 5000,
         _nRetryTime = 6000;
     bool _bAcceptRanges = false,

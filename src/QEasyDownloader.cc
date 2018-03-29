@@ -44,15 +44,33 @@
 QEasyDownloader::QEasyDownloader(QObject *parent, QNetworkAccessManager *toUseManager)
     : QObject(parent)
 {
+    /*
+     * Since a whole Qt Application only requires a single QNetworkAccessManager ,
+     * We have to give users to utilise this feature and avoid overhead.
+     */
     _pManager = (toUseManager == nullptr) ? new QNetworkAccessManager(this) : toUseManager;
+    
+    /*
+     * Makes the requests follow urls
+    */
     _pManager->setRedirectPolicy(QNetworkRequest::NoLessSafeRedirectPolicy);
-    connect(_pManager, &QNetworkAccessManager::networkAccessibleChanged, this, &QEasyDownloader::Retry);
+    
+    /*
+     * Automatically Handles Network Interruption!
+    */
+    connect(_pManager, &QNetworkAccessManager::networkAccessibleChanged, this, &QEasyDownloader::retry);
     return;
 }
 
 QEasyDownloader::~QEasyDownloader()
 {
-    _pManager->deleteLater();
+    /*
+     * Since Qt uses parent to child deallocation , We don't need to deallocate
+     * our children manually , When QEasyDownloader object is deallocated our 
+     * children also get deallocated.
+     *
+     * Also to avoid double-free corruption.
+    */
     return;
 }
 
@@ -67,35 +85,35 @@ QEasyDownloader::~QEasyDownloader()
 void QEasyDownloader::setDebug(bool ch)
 {
     QMutexLocker locker(&mutex);
-    doDebug = ch;
+    _bDoDebug = ch;
     return;
 }
 
 void QEasyDownloader::setIterated(bool ch)
 {
     QMutexLocker locker(&mutex);
-    doIterate = ch;
+    _bDoIterate = ch;
     return;
 }
 
 void QEasyDownloader::setResumeDownloads(bool ch)
 {
     QMutexLocker locker(&mutex);
-    doResumeDownloads = ch;
+    _bDoResumeDownloads = ch;
     return;
 }
 
 void QEasyDownloader::setTimeoutTime(int time)
 {
     QMutexLocker locker(&mutex);
-    	_TimeoutTime = time;
+    	_nTimeoutTime = time;
     return;
 }
 
 void QEasyDownloader::setRetryTime(int time)
 {
     QMutexLocker locker(&mutex);
-    	_RetryTime = time;
+    	_nRetryTime = time;
     return;
 }
 
@@ -119,13 +137,13 @@ void QEasyDownloader::download()
 
     _pCurrentReply = _pManager->get(_CurrentRequest);
 
-    _Timer.setInterval(_TimeoutTime);
+    _Timer.setInterval(_nTimeoutTime);
     _Timer.setSingleShot(true);
 
     connect(&_Timer, SIGNAL(timeout()), this, SLOT(timeout()));
 
     _Timer.start();
-    downloadSpeed.start();
+    _downloadSpeed.start();
 
     connect(_pCurrentReply, SIGNAL(finished()), this, SLOT(finished()));
     connect(_pCurrentReply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(downloadProgress(qint64,qint64)));
@@ -152,10 +170,10 @@ void QEasyDownloader::checkHead(qint64 bytesRecived, qint64 bytesTotal)
 
     _nDownloadTotal = bytesTotal; // less expensive than parsing the content length header.
     if(_pCurrentReply->attribute( QNetworkRequest::HttpStatusCodeAttribute ).toInt() >= 400) {
-        if(!doIterate) {
+        if(!_bDoIterate) {
             startNextDownload();
         } else {
-            canIterate = true;
+            _bCanIterate = true;
         }
         return;
     }
@@ -170,7 +188,7 @@ void QEasyDownloader::checkHead(qint64 bytesRecived, qint64 bytesTotal)
     */
     _pCurrentReply->abort(); // stop the request.
     _pCurrentReply->deleteLater();
-    _pCurrentReply = NULL;
+    _pCurrentReply = nullptr;
 
     /*
      * Set the new request to download the file.
@@ -185,7 +203,7 @@ void QEasyDownloader::checkHead(qint64 bytesRecived, qint64 bytesTotal)
     if (!_bAcceptRanges) {
         _pFile->remove();
     }
-    if(!doResumeDownloads) {
+    if(!_bDoResumeDownloads) {
         _pFile->remove();
     }
 
@@ -208,20 +226,20 @@ void QEasyDownloader::checkHead(qint64 bytesRecived, qint64 bytesTotal)
 
 void QEasyDownloader::finished()
 {
-    if(isError) {
-        isError = false;
+    if(_bIsError) {
+        _bIsError = false;
         return;
     }
     
     _Timer.stop();
     _pFile->close();
-    _pFile = NULL;
+    _pFile = nullptr;
     _pCurrentReply = 0;
 
-    if(!doIterate) {
+    if(!_bDoIterate) {
         startNextDownload();
     } else {
-        canIterate = true;
+        _bCanIterate = true;
     }
     emit DownloadFinished(_URL, _qsFileName);
     return;
@@ -246,7 +264,7 @@ void QEasyDownloader::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
             )
         );
 
-    double speed = bytesReceived * 1000.0 / downloadSpeed.elapsed();
+    double speed = bytesReceived * 1000.0 / _downloadSpeed.elapsed();
     QString unit;
     if (speed < 1024) {
         unit = "bytes/sec";
@@ -265,23 +283,23 @@ void QEasyDownloader::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
                           unit,
                           _URL,
                           _qsFileName);
-    _Timer.start(_TimeoutTime);
+    _Timer.start(_nTimeoutTime);
     return;
 }
 
 void QEasyDownloader::startNextDownload()
 {
-    if(StopDownload) {
+    if(_bStopDownload) {
         return;
     }
 
-    if (downloadQueue.isEmpty()) {
+    if (_downloadQueue.isEmpty()) {
         _bAutoStartDownload  = true;
         emit(Finished());
         return;
     }
 
-    QStringList DownloadInformation = downloadQueue.dequeue();
+    QStringList DownloadInformation = _downloadQueue.dequeue();
 
     _URL = QUrl(DownloadInformation.at(0));
     _qsFileName = DownloadInformation.at(1);
@@ -309,7 +327,7 @@ void QEasyDownloader::startNextDownload()
     */
     _pCurrentReply = _pManager->get(_CurrentRequest);
 
-    _Timer.setInterval(_TimeoutTime);
+    _Timer.setInterval(_nTimeoutTime);
     _Timer.setSingleShot(true);
 
     connect(&_Timer, SIGNAL(timeout()), this, SLOT(timeout()));
@@ -323,11 +341,17 @@ void QEasyDownloader::startNextDownload()
 void QEasyDownloader::retry(QNetworkAccessManager::NetworkAccessibility access)
 {
     if(access == QNetworkAccessManager::NotAccessible || access == QNetworkAccessManager::UnknownAccessibility) {
-        isError = false;
+        /*
+         * Debug
+        */
+        printDebug("NetworkInterruption:: Retrying in " + QString::number(_nRetryTime));
+        // ---
+
+        _bIsError = false;
         QTimer::singleShot(500, this, SLOT(Pause()));
         return;
     }
-    QTimer::singleShot(_RetryTime, this, SLOT(Resume()));
+    QTimer::singleShot(_nRetryTime, this, SLOT(Resume()));
     return;
 }
 
@@ -341,14 +365,27 @@ void QEasyDownloader::error(QNetworkReply::NetworkError errorCode)
         return;
     }
 
-    isError = true;
-    emit Error(errorCode, _URL, _qsFileName);
+    /*
+     * Debug
+    */
+    printDebug("Error:: " + _URL.toString() + " (Error Code -> " + QString::number(errorCode) + " )");
+    // ---
+
+    _bIsError = true;
+    emit(Error(errorCode, _URL, _qsFileName));
     return;
 }
 
 void QEasyDownloader::timeout()
 {
-    emit Timeout(_URL, _qsFileName);
+    emit(Timeout(_URL, _qsFileName));
+
+    /*
+     * Debug
+    */
+    printDebug("Timeout:: " + _URL.toString());
+    // ---
+
     return;
 }
 
@@ -385,7 +422,7 @@ void QEasyDownloader::Download(const QString& givenURL, const QString& fileName)
     QMutexLocker locker(&mutex);
     QStringList DownloadInformation;
     DownloadInformation << givenURL << fileName;
-    downloadQueue.enqueue(DownloadInformation);
+    _downloadQueue.enqueue(DownloadInformation);
 
     /*
      * Debug
@@ -395,7 +432,7 @@ void QEasyDownloader::Download(const QString& givenURL, const QString& fileName)
 
     // --- 
 
-    if(_bAutoStartDownload ) { // Do not use downloadQueue.size() == 1.
+    if(_bAutoStartDownload ) { // Do not use _downloadQueue.size() == 1.
         _bAutoStartDownload  = false;
         emit(startNextDownload());
     }
@@ -411,7 +448,7 @@ void QEasyDownloader::Download(const QString& givenURL)
 void QEasyDownloader::Pause()
 {
     QMutexLocker locker(&mutex);
-    if (_pCurrentReply == NULL || StopDownload) {
+    if (_pCurrentReply == nullptr || _bStopDownload) {
         return;
     }
 
@@ -426,7 +463,7 @@ void QEasyDownloader::Pause()
     _pCurrentReply = 0;
     _nDownloadSizeAtPause = _nDownloadSize;
     _nDownloadSize = 0;
-    StopDownload = true;
+    _bStopDownload = true;
    
     /*
      * Debug and Reporting! 
@@ -443,10 +480,10 @@ void QEasyDownloader::Pause()
 void QEasyDownloader::Resume()
 {
     QMutexLocker locker(&mutex);
-    if(!StopDownload || _pCurrentReply != NULL) {
+    if(!_bStopDownload || _pCurrentReply != nullptr) {
         return;
     }
-    StopDownload = false;
+    _bStopDownload = false;
     download();
     
     /*
@@ -462,22 +499,22 @@ void QEasyDownloader::Resume()
 }
 
 
-bool QEasyDownloader::isNext()
+bool QEasyDownloader::IsNext()
 {
     QMutexLocker locker(&mutex);
-    return !downloadQueue.isEmpty();
+    return !_downloadQueue.isEmpty();
 }
 
 void QEasyDownloader::Next()
 {
     QMutexLocker locker(&mutex);
-    if(!doIterate) {
+    if(!_bDoIterate) {
         return;
     }
 
-    if(canIterate) {
+    if(_bCanIterate) {
         emit(startNextDownload());
-        canIterate = false;
+        _bCanIterate = false;
     }
     return;
 }
