@@ -1,5 +1,5 @@
 TEMPLATE = subdirs
 CONFIG += ordered
-QT += core concurrent network
 
-SUBDIR += 
+SUBDIRS += simple_download \
+          simple_download_iterator

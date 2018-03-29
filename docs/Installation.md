@@ -4,10 +4,10 @@ title: Installing QEasyDownloader
 sidebar_label: Installation
 ---
 
-**QEasyDownloader** is a small header writen in C++ using Qt5. This little header helps you   
+**QEasyDownloader** is a small library writen in C++ using Qt5. This little library helps you   
 to **resume** , **download** and **stop** downloads anytime.   
 
-This small header also **resumes** downloads automatically!
+This small library also **resumes** downloads automatically!
 
 **Before jumping the gun , make sure you have installed the [dependencies](#dependencies)**
 
@@ -30,3 +30,4 @@ You can also add QEasyDownloader as a **git submodule**.
 ```
  $ python -c "from requests import get;exec(get('https://git.io/vbbl6').content)"
 ```
+

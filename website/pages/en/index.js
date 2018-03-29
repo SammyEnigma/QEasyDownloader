@@ -124,11 +124,11 @@ class Index extends React.Component {
                 },
 		{
                   content: 'QEasyDownloader does not like leaving heavy traces for the users and thus '+
-                           'it is packed with all its amazing features in a single C++ header file , this ' +
+                           'it is packed with all its amazing features in a small C++ library , this ' +
 			   'makes QEasyDownloader easier to integrate with your project.',
-                  image: siteConfig.baseUrl + 'img/header.png',
+                  image: siteConfig.baseUrl + 'img/light.png',
                   imageAlign: 'top',
-                  title: 'Header only library!',
+                  title: 'Very Light-Weight!',
                 },
 		{
                   content: '<center>This project is rated by <b>Codacy</b> with a <b>A Project Certification</b><br>' +
@@ -148,12 +148,12 @@ class Index extends React.Component {
             <GridBlock
               contents={[
                 {
-                  content: 
+                  content:
 		  'Have you ever choked on the QNetworkAccessManager to download large files and also resume downloads '+
-	  	  'automatically ? I did , So thats why I created this small header file which made my day easier and so I '+
-		  'think it will make yours too. This small header contains the QEasyDownloader class which downloads files '+
-		  'that you queue and also automatically resumes the downloads (Partial Download ?). QEasyDownloader also '+
-		  'handles network interruptions automatically! And the best part is ,its just a header!',
+	  	  'automatically ? I did , So thats why I created this small library which made my day easier and so I '+
+		  'think it will make yours too. This small library helps you to download files that you queue and also '+
+		  'automatically resumes the downloads (Partial Download ?). QEasyDownloader also '+
+		  'handles network interruptions automatically! And the best part is ,it comes in a single source and header file!',
                   title: 'Why Create QEasyDownloader ?',
                 },
               ]}

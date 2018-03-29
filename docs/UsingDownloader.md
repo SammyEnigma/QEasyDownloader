@@ -10,7 +10,7 @@ This is a basic downloader which downloads a demo video and saves it in the curr
 
 ```
 #include <QCoreApplication>
-#include <QEasyDownloader/QEasyDownloader>
+#include <QEasyDownloader>
 
 int main(int argc, char **argv)
 {
@@ -20,13 +20,7 @@ int main(int argc, char **argv)
     */
     QEasyDownloader Downloader;
 
-    /*
-     * By Default Debug is false , make it true to print the download progress and
-     * other stuff!
-    */
-    Downloader.Debug(true);
-
-    QObject::connect(&Downloader, &QEasyDownloader::DownloadFinished,
+    Object::connect(&Downloader, &QEasyDownloader::DownloadFinished,
     [&](QUrl Url, QString file) {
         qDebug() << "Downloaded :: " << file << " :: FROM :: " << Url;
         app.quit();
@@ -46,7 +40,7 @@ TARGET = simple_download
 TEMPLATE = app
 
 QT += core network
-
+INCLUDEPATH += QEasyDownloader QEasyDownloader/include 
 SOURCES += main.cpp QEasyDownloader/src/QEasyDownloader.cc
 HEADERS += QEasyDownloader/include/QEasyDownloader.hpp
 ```

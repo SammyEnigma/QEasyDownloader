@@ -1,7 +1,7 @@
 #!/usr/bin/python
 #
 # BSD-3 Clause.
-# Copyright (C) 2017 Antony Jr.
+# Copyright (C) 2018 Antony Jr.
 #
 # Simple Cross Platform Installer Script
 import sys
@@ -18,13 +18,13 @@ QEasyDownloader = {
             "QEasyDownloader/include"
         },
         "install"  : {
-            "CMakeLists.txt"       : "QEasyDownloader/CMakeLists.txt",
-            "QEasyDownloader.pro"         : "QEasyDownloader/QEasyDownloader.pro",
-            "QEasyDownloader"             : "QEasyDownloader/QEasyDownloader",
-            "include/QEasyDownloader.hpp" : "QEasyDownloader/include/QEasyDownloader.hpp",
-            "src/QEasyDownloader.cc"      : "QEasyDownloader/src/QEasyDownloader.cc",
-            "LICENSE"      : "QEasyDownloader/LICENSE"
-        }
+             "CMakeLists.txt"       : "QEasyDownloader/CMakeLists.txt",
+             "QEasyDownloader.pro"         : "QEasyDownloader/QEasyDownloader.pro",
+             "QEasyDownloader"             : "QEasyDownloader/QEasyDownloader",
+             "include/QEasyDownloader.hpp" : "QEasyDownloader/include/QEasyDownloader.hpp",
+             "src/QEasyDownloader.cc"      : "QEasyDownloader/src/QEasyDownloader.cc",
+             "LICENSE"      : "QEasyDownloader/LICENSE"
+         }
 }
 
 def installPackage(config):
@@ -59,5 +59,5 @@ def installPackage(config):
     return True
 
 if __name__ == "__main__":
-    installPackage(QEasyDownloader)
+    installPackage(QArchive)
     sys.exit(0)

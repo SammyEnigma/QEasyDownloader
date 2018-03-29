@@ -50,20 +50,17 @@ want in a single class and thus its **easier** for you to **remember**.
 
 The default Constructor for **QEasyDownloader** , takes no argument until the user gives it!
 
-#### void Debug(bool choose)
+#### void setDebug(bool choose)
 
-Sets debuging for **QEasyDownloader**.
+Sets debugging for **QEasyDownloader**.
 
 > Default is set to **False**
 
-#### void ResumeDownloads(bool choose)
+#### void setResumeDownloads(bool choose)
 
 Sets whether to resume download ( **Partial Download** ) or not.
 
-> **Warning**: Please **disable** Resume of Downloads for **host** which **does not allow HEAD Request**.   
-> Default is set to **True**
-
-#### void Iterated(bool choose)
+#### void setIterated(bool choose)
 
 Only starts the first download automatically , Then you have to iterate over the downloader.
 In this sequence , Download , When Finished , Approve the next Download and so on until **Finished()** Signal is emitted.
@@ -102,16 +99,15 @@ Pauses any current download.
 
 Resumes if any download is paused.
 
+#### bool HasNext(void)
+<p align="right"> <b>[SLOT]</b> </p>
+
+Returns **true** if download queue is not empty.
+
 #### void Next(void)
 <p align="right"> <b>[SLOT]</b> </p>
 
 Download the next item in the download queue. Only enabled when **Iterated(bool)** is set to **True**.
-
-
-#### void Get(const QUrl &url)
-<p align="right"> <b>[SLOT]</b> </p>
-
-Makes a simple get request , can be used for simple webpage retrival. Emits **GetResponse** when its done.
 
 #### void Finished(void)
 <p align="right"> <b>[SIGNAL]</b> </p>
@@ -141,17 +137,22 @@ This is emitted on each download progress with **the given url** and **filename*
 
 This is emitted when something goes wrong with the download , refer the  **[error codes](QEasyDownloaderErrorCodes.md)** for more information.
 
-> **Tips:** Enabling Debug will print errors automatically.
-
 #### void Timeout(const QUrl &url, const QString &fileName)
 <p align="right"> <b>[SIGNAL]</b> </p>
 
 This is emitted when there is a **timeout** in the **request**.
 
-#### void GetResponse(const QString &content)
+#### void Paused(const QUrl &url , const QString &fileName)
 <p align="right"> <b>[SIGNAL]</b> </p>
 
-This is emitted when **Get** is finished. It is emitted only with the **contents**.
+Emitted when a download is **paused** successfully.
 
-> **Tips:** You can use this for simple configuration retrival.
+#### void Resumed(const QUrl &url , const QString &fileName)
+<p align="right"> <b>[SIGNAL]</b> </p>
 
+Emitted when a download is **resumed** successfully.
+
+#### void Debugger(const QString &msg)
+<p align="right"> <b>[SIGNAL]</b> </p>
+
+Emitted when a message is pushed to the debugger.

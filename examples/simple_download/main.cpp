@@ -28,7 +28,7 @@ int main(int argc, char **argv)
      * Connect Callbacks!
     */
     QObject::connect(&Downloader, &QEasyDownloader::Debugger,
-    [&](QString msg){
+    [&](QString msg) {
         qDebug() << msg;
         return;
     });
