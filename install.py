@@ -59,5 +59,5 @@ def installPackage(config):
     return True
 
 if __name__ == "__main__":
-    installPackage(QArchive)
+    installPackage(QEasyDownloader)
     sys.exit(0)
