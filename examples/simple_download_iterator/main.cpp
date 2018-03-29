@@ -1,5 +1,5 @@
 #include <QCoreApplication>
-#include "../../QEasyDownloader.hpp"
+#include <QEasyDownloader>
 
 int main(int argc, char **argv)
 {

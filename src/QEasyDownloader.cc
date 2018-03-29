@@ -64,34 +64,38 @@ QEasyDownloader::~QEasyDownloader()
  * Public Methods
  * --------------------------
 */
-void QEasyDownloader::Debug(bool ch)
+void QEasyDownloader::setDebug(bool ch)
 {
+    QMutexLocker locker(&mutex);
     doDebug = ch;
     return;
 }
 
-void QEasyDownloader::Iterated(bool ch)
+void QEasyDownloader::setIterated(bool ch)
 {
+    QMutexLocker locker(&mutex);
     doIterate = ch;
     return;
 }
 
-void QEasyDownloader::ResumeDownloads(bool ch)
+void QEasyDownloader::setResumeDownloads(bool ch)
 {
+    QMutexLocker locker(&mutex);
     doResumeDownloads = ch;
     return;
 }
 
 void QEasyDownloader::setTimeoutTime(int time)
 {
-
-    _TimeoutTime = time;
+    QMutexLocker locker(&mutex);
+    	_TimeoutTime = time;
     return;
 }
 
 void QEasyDownloader::setRetryTime(int time)
 {
-    _RetryTime = time;
+    QMutexLocker locker(&mutex);
+    	_RetryTime = time;
     return;
 }
 
@@ -106,9 +110,6 @@ void QEasyDownloader::setRetryTime(int time)
 void QEasyDownloader::download()
 {
     if (_bAcceptRanges) {
-        if(doDebug) {
-            qDebug() << "QEasyDownloader::Partial Download:: " << _nDownloadSizeAtPause;
-        }
         QByteArray rangeHeaderValue = "bytes=" + QByteArray::number(_nDownloadSizeAtPause) + "-";
         if (_nDownloadTotal > 0) {
             rangeHeaderValue += QByteArray::number(_nDownloadTotal);
@@ -151,10 +152,6 @@ void QEasyDownloader::checkHead(qint64 bytesRecived, qint64 bytesTotal)
 
     _nDownloadTotal = bytesTotal; // less expensive than parsing the content length header.
     if(_pCurrentReply->attribute( QNetworkRequest::HttpStatusCodeAttribute ).toInt() >= 400) {
-        if(doDebug) {
-            qDebug() << "QEasyDownloader::HTTP ERROR::"
-                     << _pCurrentReply->attribute( QNetworkRequest::HttpStatusCodeAttribute ).toInt();
-        }
         if(!doIterate) {
             startNextDownload();
         } else {
@@ -215,9 +212,7 @@ void QEasyDownloader::finished()
         isError = false;
         return;
     }
-    if(doDebug) {
-        qDebug() << "QEasyDownloader::Finishing Download!";
-    }
+    
     _Timer.stop();
     _pFile->close();
     _pFile = NULL;
@@ -263,11 +258,6 @@ void QEasyDownloader::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
         unit = "MB/s";
     }
 
-    if(doDebug) {
-        qDebug() << "QEasyDownloader::Downloading :: " << _qsFileName << nPercentage << "% at "
-                 << speed << unit;
-    }
-
     emit DownloadProgress(bytesReceived,
                           bytesTotal,
                           nPercentage,
@@ -286,23 +276,17 @@ void QEasyDownloader::startNextDownload()
     }
 
     if (downloadQueue.isEmpty()) {
-        NewDownload = true;
+        _bAutoStartDownload  = true;
         emit(Finished());
         return;
     }
 
-    if(doDebug) {
-        qDebug() << "QEasyDownloader::Starting Next Download!";
-    }
     QStringList DownloadInformation = downloadQueue.dequeue();
 
     _URL = QUrl(DownloadInformation.at(0));
     _qsFileName = DownloadInformation.at(1);
 
     if(_URL.isEmpty() || _qsFileName.isEmpty()) {
-        if(doDebug) {
-            qDebug() << "QEasyDownloader::Invalid URL::Skiping!";
-        }
         QTimer::singleShot(0, this, SLOT(startNextDownload()));
         return;
     }
@@ -336,6 +320,18 @@ void QEasyDownloader::startNextDownload()
     return;
 }
 
+void QEasyDownloader::retry(QNetworkAccessManager::NetworkAccessibility access)
+{
+    if(access == QNetworkAccessManager::NotAccessible || access == QNetworkAccessManager::UnknownAccessibility) {
+        isError = false;
+        QTimer::singleShot(500, this, SLOT(Pause()));
+        return;
+    }
+    QTimer::singleShot(_RetryTime, this, SLOT(Resume()));
+    return;
+}
+
+
 void QEasyDownloader::error(QNetworkReply::NetworkError errorCode)
 {
     /*
@@ -346,18 +342,12 @@ void QEasyDownloader::error(QNetworkReply::NetworkError errorCode)
     }
 
     isError = true;
-    if(doDebug) {
-        qDebug() << "QEasyDownloader::error::" << errorCode;
-    }
     emit Error(errorCode, _URL, _qsFileName);
     return;
 }
 
 void QEasyDownloader::timeout()
 {
-    if(doDebug) {
-        qDebug() << "QEasyDownloader::timeout";
-    }
     emit Timeout(_URL, _qsFileName);
     return;
 }
@@ -373,6 +363,14 @@ QString QEasyDownloader::saveFileName(const QString& url)
     return basename;
 }
 
+void QEasyDownloader::printDebug(const QString &msg)
+{
+    if(_bDoDebug){
+        emit(Debugger(msg));
+    }
+    return;
+}
+
 /*
  * ------
 */
@@ -384,17 +382,21 @@ QString QEasyDownloader::saveFileName(const QString& url)
 
 void QEasyDownloader::Download(const QString& givenURL, const QString& fileName)
 {
-
-    if(doDebug) {
-        qDebug() << "QEasyDownloader::Added to Queue:: " << givenURL << " :: " << fileName;
-    }
-
+    QMutexLocker locker(&mutex);
     QStringList DownloadInformation;
     DownloadInformation << givenURL << fileName;
     downloadQueue.enqueue(DownloadInformation);
 
-    if(NewDownload) { // Do not use downloadQueue.size() == 1.
-        NewDownload = false;
+    /*
+     * Debug
+    */
+
+    printDebug("Queued:: " + givenURL + " -> " + fileName);
+
+    // --- 
+
+    if(_bAutoStartDownload ) { // Do not use downloadQueue.size() == 1.
+        _bAutoStartDownload  = false;
         emit(startNextDownload());
     }
     return;
@@ -408,16 +410,11 @@ void QEasyDownloader::Download(const QString& givenURL)
 
 void QEasyDownloader::Pause()
 {
+    QMutexLocker locker(&mutex);
     if (_pCurrentReply == NULL || StopDownload) {
-        if(doDebug) {
-            qDebug() << "QEasyDownloader::Download Paused :: " << " No Effect because no download is in progress. ";
-        }
         return;
     }
 
-    if(doDebug) {
-        qDebug() << "QEasyDownloader::Download Paused :: " << _URL  << " :: " << _qsFileName;
-    }
     _Timer.stop();
     disconnect(&_Timer, SIGNAL(timeout()), this, SLOT(timeout()));
     disconnect(_pCurrentReply, SIGNAL(finished()), this, SLOT(finished()));
@@ -430,33 +427,50 @@ void QEasyDownloader::Pause()
     _nDownloadSizeAtPause = _nDownloadSize;
     _nDownloadSize = 0;
     StopDownload = true;
+   
+    /*
+     * Debug and Reporting! 
+    */
+
+    printDebug("Paused:: " + _URL.toString());
+    emit(Paused(_URL , _qsFileName));
+
+    // ----
+
     return;
 }
 
 void QEasyDownloader::Resume()
 {
+    QMutexLocker locker(&mutex);
     if(!StopDownload || _pCurrentReply != NULL) {
-        if(doDebug) {
-            qDebug() << "QEasyDownloader::Download Resumed :: " << " No effect because no download was paused!";
-        }
         return;
-    }
-    if(doDebug) {
-        qDebug() << "QEasyDownloader::Download Resumed :: " << _URL  << " :: " << _qsFileName;
     }
     StopDownload = false;
     download();
+    
+    /*
+     * Debug and Reporting! 
+    */
+
+    printDebug("Resumed:: " + _URL.toString());
+    emit(Resumed(_URL , _qsFileName));
+
+    // ----
+
     return;
 }
 
 
 bool QEasyDownloader::isNext()
 {
+    QMutexLocker locker(&mutex);
     return !downloadQueue.isEmpty();
 }
 
 void QEasyDownloader::Next()
 {
+    QMutexLocker locker(&mutex);
     if(!doIterate) {
         return;
     }
@@ -465,49 +479,6 @@ void QEasyDownloader::Next()
         emit(startNextDownload());
         canIterate = false;
     }
-    return;
-}
-
-
-void QEasyDownloader::Retry(QNetworkAccessManager::NetworkAccessibility access)
-{
-    if(doDebug) {
-        qDebug() << "QEasyDownloader::Retry :: " << access;
-
-    }
-    if(access == QNetworkAccessManager::NotAccessible || access == QNetworkAccessManager::UnknownAccessibility) {
-        isError = false;
-        QTimer::singleShot(500, this, SLOT(Pause()));
-        return;
-    }
-    QTimer::singleShot(_RetryTime, this, SLOT(Resume()));
-    if(doDebug) {
-        qDebug() << "QEasyDownloader::Retry ::" << "Success!";
-    }
-    return;
-}
-
-void QEasyDownloader::Get(const QUrl &url)
-{
-    _CurrentRequest = QNetworkRequest(url);
-    _pCurrentGetReply = _pManager->get(_CurrentRequest);
-
-    connect(_pCurrentGetReply, &QNetworkReply::finished,
-    [&]() {
-        if(_pCurrentGetReply->attribute( QNetworkRequest::HttpStatusCodeAttribute ).toInt() >= 400) {
-            return;
-        }
-
-        QString Response(_pCurrentGetReply->readAll());
-
-        if(doDebug) {
-            qDebug() << "QEasyDownloader::GET::" << Response;
-        }
-        emit GetResponse(Response);
-        return;
-
-    });
-    connect(_pCurrentGetReply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(error(QNetworkReply::NetworkError)));
     return;
 }
 
