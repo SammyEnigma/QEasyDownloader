@@ -1,8 +1,8 @@
 TARGET = simple_download
 TEMPLATE = app
-LIBS += -l../../libQEasyDownloader.a
-INCLUDEPATH += ../../
+INCLUDEPATH += ../../ ../../include
 
 QT += core network
 
-SOURCES += main.cpp
+SOURCES += main.cpp ../../src/QEasyDownloader.cc
+HEADERS += ../../include/QEasyDownloader.hpp

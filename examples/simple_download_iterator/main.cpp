@@ -11,20 +11,6 @@ int main(int argc, char **argv)
     QEasyDownloader Downloader;
 
     /*
-     * By Default Debug is false , make it true to print the download progress and
-     * other stuff!
-    */
-    Downloader.Debug(true);
-
-    /*
-     * By Default auto Resuming of Downloads is true.
-     *
-     * You can also disable auto resuming of downloads.
-     * But I strongly recommend you don't!
-    */
-    // Downloader.ResumeDownloads(false);
-
-    /*
      * Connect Callbacks!
     */
 
@@ -37,7 +23,7 @@ int main(int argc, char **argv)
     QObject::connect(&Downloader, &QEasyDownloader::DownloadFinished,
     [&](QUrl Url, QString file) {
         qDebug() << "Downloaded :: " << file << " :: FROM :: " << Url;
-        if(Downloader.isNext()){
+        if(Downloader.IsNext()){
 	qDebug() << "Downloading the Next Download... ";
 	}else{
 	qDebug() << "Finishing All Downloads... ";
@@ -45,7 +31,7 @@ int main(int argc, char **argv)
 	Downloader.Next();
     });
     
-    Downloader.Iterated(true); // Make it iterated
+    Downloader.setIterated(true); // Make it iterated
     
     /*
      * Just Download!

@@ -40,7 +40,12 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+
 #define NONEED(x) (void)x
+
+// Just for readability.
+#define ENTRY_URL 0
+#define ENTRY_FILELOCATION 1
 
 /*
  * Class QEasyDownloader <- Inherits QObject
