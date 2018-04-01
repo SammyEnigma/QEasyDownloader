@@ -111,6 +111,8 @@ public:
     void setTimeoutTime(int);
     void setRetryTime(int);
     ~QEasyDownloader();
+    void setQsFolderPath(const QString &qsFolderPath);
+
 private slots:
     void download();
     void checkHead(qint64,qint64);

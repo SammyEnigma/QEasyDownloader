@@ -552,6 +552,11 @@ void QEasyDownloader::Next()
     return;
 }
 
+void QEasyDownloader::setQsFolderPath(const QString &qsFolderPath)
+{
+    _qsFolderPath = qsFolderPath;
+}
+
 /*
  * ---------------
 */
