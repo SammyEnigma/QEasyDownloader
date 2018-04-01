@@ -208,7 +208,13 @@ void QEasyDownloader::checkHead(qint64 bytesRecived, qint64 bytesTotal)
      */
     _CurrentRequest.setRawHeader("Connection", "Keep-Alive");
     _CurrentRequest.setAttribute(QNetworkRequest::HttpPipeliningAllowedAttribute, true);
-    _pFile = new QFile(_qsFileName);
+
+    if(_qsFolderPath.isEmpty()){
+        _pFile = new QFile(_qsFileName);
+    } else {
+        _pFile = new QFile(_qsFolderPath + "/" + _qsFileName);
+    }
+
 
     /*
      * Check if we want to delete the old file.

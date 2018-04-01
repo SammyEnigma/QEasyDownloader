@@ -149,7 +149,7 @@ private:
     QTimer _Timer;
     QTime  _downloadSpeed;
     QUrl    _URL;
-    QString _qsFileName;
+    QString _qsFileName, _qsFolderPath;
     QQueue<QStringList> _downloadQueue;
 
     int _nDownloadTotal = 0,
