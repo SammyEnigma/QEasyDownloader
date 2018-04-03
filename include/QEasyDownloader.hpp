@@ -110,8 +110,8 @@ public:
     void setResumeDownloads(bool);
     void setTimeoutTime(int);
     void setRetryTime(int);
+    void setDownloadPath(const QString &qsFolderPath);
     ~QEasyDownloader();
-    void setQsFolderPath(const QString &qsFolderPath);
 
 private slots:
     void download();
