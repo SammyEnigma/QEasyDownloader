@@ -18,6 +18,7 @@ want in a single class and thus its **easier** for you to **remember**.
 | **void** 	    | setIterated(bool choose)										       |
 | **void**	    | setTimeoutTime(int timeInMiliSecs)						                           |
 | **void**	    | setRetryTime(int timeInMiliSecs)						                               |
+| **void**      | setDownloadPath(const QString &path)                                                 |
 
 
 ### Slots
@@ -77,6 +78,13 @@ Sets the **retry** interval , when there is a **network interruption** the downl
 again , After the **retry** interval , The download is **resumed**
 
 > Default time is 6 seconds.
+
+#### void setDownloadPath(const QString &path)
+
+Sets the **download path** for **all downloads** , This is useful if you need to set a defaul download path for your downloader.
+
+> Default is the current working directory.
+
 
 #### void	Download(const QString& givenUrl , const QString& saveAs)
 <p align="right"> <b>[SLOT]</b> </p>

@@ -41,7 +41,7 @@
  * ---------------------------
  *
 */
-QEasyDownloader::QEasyDownloader(QObject* parent, QNetworkAccessManager* toUseManager)
+QEasyDownloader::QEasyDownloader(QObject *parent, QNetworkAccessManager *toUseManager)
     : QObject(parent)
 {
     /*
@@ -114,6 +114,13 @@ void QEasyDownloader::setRetryTime(int time)
 {
     QMutexLocker locker(&mutex);
     _nRetryTime = time;
+    return;
+}
+
+void QEasyDownloader::setDownloadPath(const QString &qsFolderPath)
+{
+    QMutexLocker locker(&mutex);
+    _qsFolderPath = qsFolderPath;
     return;
 }
 
@@ -296,12 +303,12 @@ void QEasyDownloader::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
     }
 
     emit(DownloadProgress(bytesReceived,
-        bytesTotal,
-        nPercentage,
-        speed,
-        unit,
-        _URL,
-        _qsFileName));
+                          bytesTotal,
+                          nPercentage,
+                          speed,
+                          unit,
+                          _URL,
+                          _qsFileName));
     _Timer.start(_nTimeoutTime);
     return;
 }
@@ -414,7 +421,7 @@ void QEasyDownloader::timeout()
     return;
 }
 
-QString QEasyDownloader::saveFileName(const QString& url)
+QString QEasyDownloader::saveFileName(const QString &url)
 {
     QString path = QUrl(url).path();
     QString basename = QFileInfo(path).fileName();
@@ -431,7 +438,7 @@ QString QEasyDownloader::saveFileName(const QString& url)
     return basename;
 }
 
-void QEasyDownloader::printDebug(const QString& msg)
+void QEasyDownloader::printDebug(const QString &msg)
 {
     if (_bDoDebug) {
         emit(Debugger(msg));
@@ -448,15 +455,15 @@ void QEasyDownloader::printDebug(const QString& msg)
  * ---------------------
 */
 
-void QEasyDownloader::Download(const QString& givenURL, const QString& fileName)
+void QEasyDownloader::Download(const QString &givenURL, const QString &fileName)
 {
     QMutexLocker locker(&mutex);
     _downloadQueue.enqueue(QStringList() << givenURL
-                                         << (
-                                                (_qsFolderPath.isEmpty()) ?
-                                                 fileName : _qsFolderPath + "/" + fileName
-                                             )
-     );
+                           << (
+                               (_qsFolderPath.isEmpty()) ?
+                               fileName : _qsFolderPath + "/" + fileName
+                           )
+                          );
 
     /*
      * Debug
@@ -471,7 +478,7 @@ void QEasyDownloader::Download(const QString& givenURL, const QString& fileName)
     return;
 }
 
-void QEasyDownloader::Download(const QString& givenURL)
+void QEasyDownloader::Download(const QString &givenURL)
 {
     Download(givenURL, saveFileName(givenURL));
     return;
@@ -548,13 +555,6 @@ void QEasyDownloader::Next()
         QTimer::singleShot(0, this, SLOT(startNextDownload()));
         _bCanIterate = false;
     }
-    return;
-}
-
-void QEasyDownloader::setDownloadPath(const QString& qsFolderPath)
-{
-    QMutexLocker locker(&mutex);
-    _qsFolderPath = qsFolderPath;
     return;
 }
 
