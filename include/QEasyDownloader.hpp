@@ -110,7 +110,9 @@ public:
     void setResumeDownloads(bool);
     void setTimeoutTime(int);
     void setRetryTime(int);
+    void setDownloadPath(const QString &qsFolderPath);
     ~QEasyDownloader();
+
 private slots:
     void download();
     void checkHead(qint64,qint64);
@@ -149,7 +151,7 @@ private:
     QTimer _Timer;
     QTime  _downloadSpeed;
     QUrl    _URL;
-    QString _qsFileName;
+    QString _qsFileName, _qsFolderPath;
     QQueue<QStringList> _downloadQueue;
 
     int _nDownloadTotal = 0,
